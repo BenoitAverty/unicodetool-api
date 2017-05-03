@@ -1,0 +1,15 @@
+type Query {
+    codepoints: [Codepoint!]
+    codepoint(value: Int!): Codepoint
+}
+
+type Codepoint {
+    value: Int!
+    name: String!
+    properties: Properties!
+}
+
+type Properties {
+    name: String!
+    block: String!
+}

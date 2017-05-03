@@ -1,39 +1,45 @@
 package org.unicodetool.graphql;
 
-import graphql.GraphQL;
-import graphql.Scalars;
-import graphql.schema.GraphQLFieldDefinition;
-import graphql.schema.GraphQLObjectType;
+import com.coxautodev.graphql.tools.GraphQLResolver;
+import com.coxautodev.graphql.tools.SchemaParser;
+import graphql.execution.ExecutionStrategy;
+import graphql.execution.SimpleExecutionStrategy;
 import graphql.schema.GraphQLSchema;
+import graphql.servlet.SimpleGraphQLServlet;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.unicodetool.graphql.schema.Codepoint;
-import org.unicodetool.graphql.schema.CodepointQuery;
-import org.unicodetool.graphql.schema.CodepointsQuery;
+import org.unicodetool.graphql.schema.Properties;
 
-import java.util.Arrays;
+import java.util.List;
 
+/**
+ * Created by benoit on 5/1/17.
+ */
 @Configuration
 public class GraphQLConfiguration {
 
-    private Object List;
-
     @Bean
-    public GraphQLSchema graphQLSchema() {
-
-        GraphQLObjectType queryType = GraphQLObjectType.newObject()
-                .name("Root")
-                .field(CodepointsQuery.graphQLField())
-                .field(CodepointQuery.graphQLField())
-                .build();
-
-        return GraphQLSchema.newSchema()
-                .query(queryType)
-                .build();
+    ExecutionStrategy executionStrategy() {
+        return new SimpleExecutionStrategy();
     }
 
     @Bean
-    public GraphQL graphQL() {
-        return GraphQL.newGraphQL(graphQLSchema()).build();
+    GraphQLSchema graphQLSchema(List<GraphQLResolver<?>> graphQLResolvers) {
+        return SchemaParser.newParser()
+                .file("unicode.graphqls")
+                .dictionary(Codepoint.class, Properties.class)
+                .resolvers(graphQLResolvers)
+                .build()
+                .makeExecutableSchema()
+        ;
+    }
+
+    @Bean
+    public ServletRegistrationBean graphqlServletRegistrationBean(GraphQLSchema graphQLSchema, ExecutionStrategy executionStrategy) {
+        return new ServletRegistrationBean(
+                new SimpleGraphQLServlet(graphQLSchema, executionStrategy),
+                "/graphql");
     }
 }
