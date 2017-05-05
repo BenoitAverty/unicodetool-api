@@ -1,23 +1,34 @@
 package org.unicodetool.graphql.schema;
 
 import com.coxautodev.graphql.tools.GraphQLRootResolver;
-import graphql.schema.DataFetchingEnvironment;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.unicodetool.graphql.schema.Codepoint;
-import org.unicodetool.graphql.schema.Properties;
+import org.unicodetool.graphql.exceptions.CodepointNotFound;
+import org.unicodetool.ucd.UnicodeCharacterDatabaseFinder;
+import org.unicodetool.ucd.schema.CodePoint;
 
 import java.util.Arrays;
 import java.util.List;
 
 @Component
 public class Query implements GraphQLRootResolver {
-    public Codepoint codepoint(Integer value) {
+
+    private final UnicodeCharacterDatabaseFinder unicodeCharacterDatabaseFinder;
+
+    @Autowired
+    public Query(UnicodeCharacterDatabaseFinder ucdf) {
+        this.unicodeCharacterDatabaseFinder = ucdf;
+    }
+
+    public Codepoint codepoint(int value) {
+        CodePoint cp = unicodeCharacterDatabaseFinder.findCodepoint(value).orElseThrow(CodepointNotFound::new);
+
         return new Codepoint(
                 value,
-                "Name for value "+value,
+                cp.getNa(),
                 new Properties(
-                        "Name for value " + value,
-                        "Probably Basic latin ?"
+                        cp.getNa(),
+                        cp.getBlk()
                 )
         );
     }
