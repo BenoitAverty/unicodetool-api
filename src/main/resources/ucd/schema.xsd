@@ -1,0 +1,2928 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright © 2005-2016 Unicode, Inc. -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.unicode.org/ns/2003/ucd/1.0" xmlns:ucd="http://www.unicode.org/ns/2003/ucd/1.0">
+  <!-- default; datatypes xsd = "http://www.w3.org/2001/XMLSchema-datatypes" -->
+  <xs:simpleType name="single-code-point">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="(|[1-9A-F]|(10))[0-9A-F]{4}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="one-or-more-code-points">
+    <xs:restriction>
+      <xs:simpleType>
+        <xs:list itemType="ucd:single-code-point"/>
+      </xs:simpleType>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="zero-or-more-code-points">
+    <xs:list itemType="ucd:single-code-point"/>
+  </xs:simpleType>
+  <xs:simpleType name="two-code-points">
+    <xs:restriction>
+      <xs:simpleType>
+        <xs:list>
+          <xs:simpleType>
+            <xs:union memberTypes="ucd:single-code-point ucd:single-code-point"/>
+          </xs:simpleType>
+        </xs:list>
+      </xs:simpleType>
+      <xs:length value="2"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="character-name">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="([A-Z0-9 #\-\(\)]*)|(&lt;control&gt;)"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="jis-code-point">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[0-9A-F]{4}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="ucd" type="ucd:ucd.content"/>
+  <xs:simpleType name="boolean">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="Y"/>
+      <xs:enumeration value="N"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="ucd.content">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="ucd:description"/>
+      <xs:element ref="ucd:repertoire"/>
+      <xs:element ref="ucd:blocks"/>
+      <xs:element ref="ucd:named-sequences"/>
+      <xs:element ref="ucd:provisional-named-sequences"/>
+      <xs:element ref="ucd:normalization-corrections"/>
+      <xs:element ref="ucd:standardized-variants"/>
+      <xs:element ref="ucd:cjk-radicals"/>
+      <xs:element ref="ucd:emoji-sources"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:element name="description" type="xs:string"/>
+  <xs:element name="repertoire">
+    <xs:complexType>
+      <xs:choice maxOccurs="unbounded">
+        <xs:element ref="ucd:code-point"/>
+        <xs:element ref="ucd:group"/>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="blocks">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="ucd:block"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="block">
+    <xs:complexType>
+      <xs:attribute name="first-cp" use="required" type="ucd:single-code-point"/>
+      <xs:attribute name="last-cp" use="required" type="ucd:single-code-point"/>
+      <xs:attribute name="name" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="named-sequences">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="ucd:named-sequence"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="named-sequence">
+    <xs:complexType>
+      <xs:attribute name="cps" use="required" type="ucd:one-or-more-code-points"/>
+      <xs:attribute name="name" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="provisional-named-sequences">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="ucd:named-sequence"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="normalization-corrections">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="ucd:normalization-correction"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="normalization-correction">
+    <xs:complexType>
+      <xs:attribute name="cp" use="required" type="ucd:single-code-point"/>
+      <xs:attribute name="old" use="required" type="ucd:one-or-more-code-points"/>
+      <xs:attribute name="new" use="required" type="ucd:one-or-more-code-points"/>
+      <xs:attribute name="version" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="standardized-variants">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="ucd:standardized-variant"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="standardized-variant">
+    <xs:complexType>
+      <xs:attribute name="cps" use="required" type="ucd:two-code-points"/>
+      <xs:attribute name="desc" use="required"/>
+      <xs:attribute name="when" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="cjk-radicals">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="ucd:cjk-radical"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="cjk-radical">
+    <xs:complexType>
+      <xs:attribute name="number" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9]{1,3}'?"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="radical" use="required" type="ucd:single-code-point"/>
+      <xs:attribute name="ideograph" use="required" type="ucd:single-code-point"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="emoji-sources">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="ucd:emoji-source"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="emoji-source">
+    <xs:complexType>
+      <xs:attribute name="unicode" use="required" type="ucd:one-or-more-code-points"/>
+      <xs:attribute name="docomo" use="required">
+        <xs:simpleType>
+          <xs:union memberTypes="ucd:jis-code-point">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:length value="0"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:union>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="kddi" use="required">
+        <xs:simpleType>
+          <xs:union memberTypes="ucd:jis-code-point">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:length value="0"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:union>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="softbank" use="required">
+        <xs:simpleType>
+          <xs:union memberTypes="ucd:jis-code-point">
+            <xs:simpleType>
+              <xs:restriction base="xs:token">
+                <xs:length value="0"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:union>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:attributeGroup name="set-of-code-points">
+    <xs:attribute name="cp" type="ucd:single-code-point"/>
+    <xs:attribute name="first-cp" type="ucd:single-code-point"/>
+    <xs:attribute name="last-cp" type="ucd:single-code-point"/>
+  </xs:attributeGroup>
+  <xs:element name="code-point" abstract="true">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="ucd:code-point-attributes">
+          <xs:attributeGroup ref="ucd:set-of-code-points"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="reserved" substitutionGroup="ucd:code-point"/>
+  <xs:element name="noncharacter" substitutionGroup="ucd:code-point"/>
+  <xs:element name="surrogate" substitutionGroup="ucd:code-point"/>
+  <xs:element name="char" substitutionGroup="ucd:code-point"/>
+  <xs:element name="group">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="ucd:code-point-attributes">
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" ref="ucd:code-point"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="code-point-attributes">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" ref="ucd:name-alias"/>
+    </xs:sequence>
+    <xs:attribute name="age">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="1.1"/>
+          <xs:enumeration value="2.0"/>
+          <xs:enumeration value="2.1"/>
+          <xs:enumeration value="3.0"/>
+          <xs:enumeration value="3.1"/>
+          <xs:enumeration value="3.2"/>
+          <xs:enumeration value="4.0"/>
+          <xs:enumeration value="4.1"/>
+          <xs:enumeration value="5.0"/>
+          <xs:enumeration value="5.1"/>
+          <xs:enumeration value="5.2"/>
+          <xs:enumeration value="6.0"/>
+          <xs:enumeration value="6.1"/>
+          <xs:enumeration value="6.2"/>
+          <xs:enumeration value="6.3"/>
+          <xs:enumeration value="7.0"/>
+          <xs:enumeration value="8.0"/>
+          <xs:enumeration value="9.0"/>
+          <xs:enumeration value="unassigned"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="na" type="ucd:character-name"/>
+    <xs:attribute name="na1" type="ucd:character-name"/>
+    <xs:attribute name="blk">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="Adlam"/>
+          <xs:enumeration value="Aegean_Numbers"/>
+          <xs:enumeration value="Ahom"/>
+          <xs:enumeration value="Alchemical"/>
+          <xs:enumeration value="Alphabetic_PF"/>
+          <xs:enumeration value="Anatolian_Hieroglyphs"/>
+          <xs:enumeration value="Ancient_Greek_Music"/>
+          <xs:enumeration value="Ancient_Greek_Numbers"/>
+          <xs:enumeration value="Ancient_Symbols"/>
+          <xs:enumeration value="Arabic"/>
+          <xs:enumeration value="Arabic_Ext_A"/>
+          <xs:enumeration value="Arabic_Math"/>
+          <xs:enumeration value="Arabic_PF_A"/>
+          <xs:enumeration value="Arabic_PF_B"/>
+          <xs:enumeration value="Arabic_Sup"/>
+          <xs:enumeration value="Armenian"/>
+          <xs:enumeration value="Arrows"/>
+          <xs:enumeration value="ASCII"/>
+          <xs:enumeration value="Avestan"/>
+          <xs:enumeration value="Balinese"/>
+          <xs:enumeration value="Bamum"/>
+          <xs:enumeration value="Bamum_Sup"/>
+          <xs:enumeration value="Bassa_Vah"/>
+          <xs:enumeration value="Batak"/>
+          <xs:enumeration value="Bengali"/>
+          <xs:enumeration value="Bhaiksuki"/>
+          <xs:enumeration value="Block_Elements"/>
+          <xs:enumeration value="Bopomofo"/>
+          <xs:enumeration value="Bopomofo_Ext"/>
+          <xs:enumeration value="Box_Drawing"/>
+          <xs:enumeration value="Brahmi"/>
+          <xs:enumeration value="Braille"/>
+          <xs:enumeration value="Buginese"/>
+          <xs:enumeration value="Buhid"/>
+          <xs:enumeration value="Byzantine_Music"/>
+          <xs:enumeration value="Carian"/>
+          <xs:enumeration value="Caucasian_Albanian"/>
+          <xs:enumeration value="Chakma"/>
+          <xs:enumeration value="Cham"/>
+          <xs:enumeration value="Cherokee"/>
+          <xs:enumeration value="Cherokee_Sup"/>
+          <xs:enumeration value="CJK"/>
+          <xs:enumeration value="CJK_Compat"/>
+          <xs:enumeration value="CJK_Compat_Forms"/>
+          <xs:enumeration value="CJK_Compat_Ideographs"/>
+          <xs:enumeration value="CJK_Compat_Ideographs_Sup"/>
+          <xs:enumeration value="CJK_Ext_A"/>
+          <xs:enumeration value="CJK_Ext_B"/>
+          <xs:enumeration value="CJK_Ext_C"/>
+          <xs:enumeration value="CJK_Ext_D"/>
+          <xs:enumeration value="CJK_Ext_E"/>
+          <xs:enumeration value="CJK_Radicals_Sup"/>
+          <xs:enumeration value="CJK_Strokes"/>
+          <xs:enumeration value="CJK_Symbols"/>
+          <xs:enumeration value="Compat_Jamo"/>
+          <xs:enumeration value="Control_Pictures"/>
+          <xs:enumeration value="Coptic"/>
+          <xs:enumeration value="Coptic_Epact_Numbers"/>
+          <xs:enumeration value="Counting_Rod"/>
+          <xs:enumeration value="Cuneiform"/>
+          <xs:enumeration value="Cuneiform_Numbers"/>
+          <xs:enumeration value="Currency_Symbols"/>
+          <xs:enumeration value="Cypriot_Syllabary"/>
+          <xs:enumeration value="Cyrillic"/>
+          <xs:enumeration value="Cyrillic_Ext_A"/>
+          <xs:enumeration value="Cyrillic_Ext_B"/>
+          <xs:enumeration value="Cyrillic_Ext_C"/>
+          <xs:enumeration value="Cyrillic_Sup"/>
+          <xs:enumeration value="Deseret"/>
+          <xs:enumeration value="Devanagari"/>
+          <xs:enumeration value="Devanagari_Ext"/>
+          <xs:enumeration value="Diacriticals"/>
+          <xs:enumeration value="Diacriticals_For_Symbols"/>
+          <xs:enumeration value="Diacriticals_Sup"/>
+          <xs:enumeration value="Diacriticals_Ext"/>
+          <xs:enumeration value="Dingbats"/>
+          <xs:enumeration value="Domino"/>
+          <xs:enumeration value="Duployan"/>
+          <xs:enumeration value="Early_Dynastic_Cuneiform"/>
+          <xs:enumeration value="Egyptian_Hieroglyphs"/>
+          <xs:enumeration value="Elbasan"/>
+          <xs:enumeration value="Emoticons"/>
+          <xs:enumeration value="Enclosed_Alphanum"/>
+          <xs:enumeration value="Enclosed_Alphanum_Sup"/>
+          <xs:enumeration value="Enclosed_CJK"/>
+          <xs:enumeration value="Enclosed_Ideographic_Sup"/>
+          <xs:enumeration value="Ethiopic"/>
+          <xs:enumeration value="Ethiopic_Ext"/>
+          <xs:enumeration value="Ethiopic_Ext_A"/>
+          <xs:enumeration value="Ethiopic_Sup"/>
+          <xs:enumeration value="Geometric_Shapes"/>
+          <xs:enumeration value="Geometric_Shapes_Ext"/>
+          <xs:enumeration value="Georgian"/>
+          <xs:enumeration value="Georgian_Sup"/>
+          <xs:enumeration value="Glagolitic"/>
+          <xs:enumeration value="Glagolitic_Sup"/>
+          <xs:enumeration value="Gothic"/>
+          <xs:enumeration value="Grantha"/>
+          <xs:enumeration value="Greek"/>
+          <xs:enumeration value="Greek_Ext"/>
+          <xs:enumeration value="Gujarati"/>
+          <xs:enumeration value="Gurmukhi"/>
+          <xs:enumeration value="Half_And_Full_Forms"/>
+          <xs:enumeration value="Half_Marks"/>
+          <xs:enumeration value="Hangul"/>
+          <xs:enumeration value="Hanunoo"/>
+          <xs:enumeration value="Hatran"/>
+          <xs:enumeration value="Hebrew"/>
+          <xs:enumeration value="High_PU_Surrogates"/>
+          <xs:enumeration value="High_Surrogates"/>
+          <xs:enumeration value="Hiragana"/>
+          <xs:enumeration value="IDC"/>
+          <xs:enumeration value="Ideographic_Symbols"/>
+          <xs:enumeration value="Imperial_Aramaic"/>
+          <xs:enumeration value="Indic_Number_Forms"/>
+          <xs:enumeration value="Inscriptional_Pahlavi"/>
+          <xs:enumeration value="Inscriptional_Parthian"/>
+          <xs:enumeration value="IPA_Ext"/>
+          <xs:enumeration value="Jamo"/>
+          <xs:enumeration value="Jamo_Ext_A"/>
+          <xs:enumeration value="Jamo_Ext_B"/>
+          <xs:enumeration value="Javanese"/>
+          <xs:enumeration value="Kaithi"/>
+          <xs:enumeration value="Kana_Sup"/>
+          <xs:enumeration value="Kanbun"/>
+          <xs:enumeration value="Kangxi"/>
+          <xs:enumeration value="Kannada"/>
+          <xs:enumeration value="Katakana"/>
+          <xs:enumeration value="Katakana_Ext"/>
+          <xs:enumeration value="Kayah_Li"/>
+          <xs:enumeration value="Kharoshthi"/>
+          <xs:enumeration value="Khmer"/>
+          <xs:enumeration value="Khmer_Symbols"/>
+          <xs:enumeration value="Khojki"/>
+          <xs:enumeration value="Khudawadi"/>
+          <xs:enumeration value="Lao"/>
+          <xs:enumeration value="Latin_1_Sup"/>
+          <xs:enumeration value="Latin_Ext_A"/>
+          <xs:enumeration value="Latin_Ext_Additional"/>
+          <xs:enumeration value="Latin_Ext_B"/>
+          <xs:enumeration value="Latin_Ext_C"/>
+          <xs:enumeration value="Latin_Ext_D"/>
+          <xs:enumeration value="Latin_Ext_E"/>
+          <xs:enumeration value="Lepcha"/>
+          <xs:enumeration value="Letterlike_Symbols"/>
+          <xs:enumeration value="Limbu"/>
+          <xs:enumeration value="Linear_A"/>
+          <xs:enumeration value="Linear_B_Ideograms"/>
+          <xs:enumeration value="Linear_B_Syllabary"/>
+          <xs:enumeration value="Lisu"/>
+          <xs:enumeration value="Low_Surrogates"/>
+          <xs:enumeration value="Lycian"/>
+          <xs:enumeration value="Lydian"/>
+          <xs:enumeration value="Mahajani"/>
+          <xs:enumeration value="Mahjong"/>
+          <xs:enumeration value="Malayalam"/>
+          <xs:enumeration value="Mandaic"/>
+          <xs:enumeration value="Manichaean"/>
+          <xs:enumeration value="Marchen"/>
+          <xs:enumeration value="Math_Alphanum"/>
+          <xs:enumeration value="Math_Operators"/>
+          <xs:enumeration value="Meetei_Mayek"/>
+          <xs:enumeration value="Meetei_Mayek_Ext"/>
+          <xs:enumeration value="Mende_Kikakui"/>
+          <xs:enumeration value="Meroitic_Cursive"/>
+          <xs:enumeration value="Meroitic_Hieroglyphs"/>
+          <xs:enumeration value="Miao"/>
+          <xs:enumeration value="Misc_Arrows"/>
+          <xs:enumeration value="Misc_Math_Symbols_A"/>
+          <xs:enumeration value="Misc_Math_Symbols_B"/>
+          <xs:enumeration value="Misc_Pictographs"/>
+          <xs:enumeration value="Misc_Symbols"/>
+          <xs:enumeration value="Misc_Technical"/>
+          <xs:enumeration value="Modi"/>
+          <xs:enumeration value="Modifier_Letters"/>
+          <xs:enumeration value="Modifier_Tone_Letters"/>
+          <xs:enumeration value="Mongolian"/>
+          <xs:enumeration value="Mongolian_Sup"/>
+          <xs:enumeration value="Mro"/>
+          <xs:enumeration value="Music"/>
+          <xs:enumeration value="Multani"/>
+          <xs:enumeration value="Myanmar"/>
+          <xs:enumeration value="Myanmar_Ext_A"/>
+          <xs:enumeration value="Myanmar_Ext_B"/>
+          <xs:enumeration value="Nabataean"/>
+          <xs:enumeration value="NB"/>
+          <xs:enumeration value="New_Tai_Lue"/>
+          <xs:enumeration value="Newa"/>
+          <xs:enumeration value="NKo"/>
+          <xs:enumeration value="Number_Forms"/>
+          <xs:enumeration value="OCR"/>
+          <xs:enumeration value="Ogham"/>
+          <xs:enumeration value="Ol_Chiki"/>
+          <xs:enumeration value="Old_Hungarian"/>
+          <xs:enumeration value="Old_Italic"/>
+          <xs:enumeration value="Old_North_Arabian"/>
+          <xs:enumeration value="Old_Permic"/>
+          <xs:enumeration value="Old_Persian"/>
+          <xs:enumeration value="Old_South_Arabian"/>
+          <xs:enumeration value="Old_Turkic"/>
+          <xs:enumeration value="Oriya"/>
+          <xs:enumeration value="Ornamental_Dingbats"/>
+          <xs:enumeration value="Osage"/>
+          <xs:enumeration value="Osmanya"/>
+          <xs:enumeration value="Pahawh_Hmong"/>
+          <xs:enumeration value="Palmyrene"/>
+          <xs:enumeration value="Pau_Cin_Hau"/>
+          <xs:enumeration value="Phags_Pa"/>
+          <xs:enumeration value="Phaistos"/>
+          <xs:enumeration value="Phoenician"/>
+          <xs:enumeration value="Phonetic_Ext"/>
+          <xs:enumeration value="Phonetic_Ext_Sup"/>
+          <xs:enumeration value="Playing_Cards"/>
+          <xs:enumeration value="Psalter_Pahlavi"/>
+          <xs:enumeration value="PUA"/>
+          <xs:enumeration value="Punctuation"/>
+          <xs:enumeration value="Rejang"/>
+          <xs:enumeration value="Rumi"/>
+          <xs:enumeration value="Runic"/>
+          <xs:enumeration value="Samaritan"/>
+          <xs:enumeration value="Saurashtra"/>
+          <xs:enumeration value="Sharada"/>
+          <xs:enumeration value="Shavian"/>
+          <xs:enumeration value="Shorthand_Format_Controls"/>
+          <xs:enumeration value="Siddham"/>
+          <xs:enumeration value="Sinhala"/>
+          <xs:enumeration value="Sinhala_Archaic_Numbers"/>
+          <xs:enumeration value="Small_Forms"/>
+          <xs:enumeration value="Sora_Sompeng"/>
+          <xs:enumeration value="Specials"/>
+          <xs:enumeration value="Sundanese"/>
+          <xs:enumeration value="Sundanese_Sup"/>
+          <xs:enumeration value="Sup_Arrows_A"/>
+          <xs:enumeration value="Sup_Arrows_B"/>
+          <xs:enumeration value="Sup_Arrows_C"/>
+          <xs:enumeration value="Sup_Math_Operators"/>
+          <xs:enumeration value="Sup_PUA_A"/>
+          <xs:enumeration value="Sup_PUA_B"/>
+          <xs:enumeration value="Sup_Punctuation"/>
+          <xs:enumeration value="Sup_Symbols_And_Pictographs"/>
+          <xs:enumeration value="Super_And_Sub"/>
+          <xs:enumeration value="Sutton_SignWriting"/>
+          <xs:enumeration value="Syloti_Nagri"/>
+          <xs:enumeration value="Syriac"/>
+          <xs:enumeration value="Tagalog"/>
+          <xs:enumeration value="Tagbanwa"/>
+          <xs:enumeration value="Tags"/>
+          <xs:enumeration value="Tai_Le"/>
+          <xs:enumeration value="Tai_Tham"/>
+          <xs:enumeration value="Tai_Viet"/>
+          <xs:enumeration value="Tai_Xuan_Jing"/>
+          <xs:enumeration value="Takri"/>
+          <xs:enumeration value="Tamil"/>
+          <xs:enumeration value="Tangut"/>
+          <xs:enumeration value="Tangut_Components"/>
+          <xs:enumeration value="Telugu"/>
+          <xs:enumeration value="Thaana"/>
+          <xs:enumeration value="Thai"/>
+          <xs:enumeration value="Tibetan"/>
+          <xs:enumeration value="Tifinagh"/>
+          <xs:enumeration value="Tirhuta"/>
+          <xs:enumeration value="Transport_And_Map"/>
+          <xs:enumeration value="UCAS"/>
+          <xs:enumeration value="UCAS_Ext"/>
+          <xs:enumeration value="Ugaritic"/>
+          <xs:enumeration value="Vai"/>
+          <xs:enumeration value="Vedic_Ext"/>
+          <xs:enumeration value="Vertical_Forms"/>
+          <xs:enumeration value="VS"/>
+          <xs:enumeration value="VS_Sup"/>
+          <xs:enumeration value="Warang_Citi"/>
+          <xs:enumeration value="Yi_Radicals"/>
+          <xs:enumeration value="Yi_Syllables"/>
+          <xs:enumeration value="Yijing"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="gc">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="Lu"/>
+          <xs:enumeration value="Ll"/>
+          <xs:enumeration value="Lt"/>
+          <xs:enumeration value="Lm"/>
+          <xs:enumeration value="Lo"/>
+          <xs:enumeration value="Mn"/>
+          <xs:enumeration value="Mc"/>
+          <xs:enumeration value="Me"/>
+          <xs:enumeration value="Nd"/>
+          <xs:enumeration value="Nl"/>
+          <xs:enumeration value="No"/>
+          <xs:enumeration value="Pc"/>
+          <xs:enumeration value="Pd"/>
+          <xs:enumeration value="Ps"/>
+          <xs:enumeration value="Pe"/>
+          <xs:enumeration value="Pi"/>
+          <xs:enumeration value="Pf"/>
+          <xs:enumeration value="Po"/>
+          <xs:enumeration value="Sm"/>
+          <xs:enumeration value="Sc"/>
+          <xs:enumeration value="Sk"/>
+          <xs:enumeration value="So"/>
+          <xs:enumeration value="Zs"/>
+          <xs:enumeration value="Zl"/>
+          <xs:enumeration value="Zp"/>
+          <xs:enumeration value="Cc"/>
+          <xs:enumeration value="Cf"/>
+          <xs:enumeration value="Cs"/>
+          <xs:enumeration value="Co"/>
+          <xs:enumeration value="Cn"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="ccc">
+      <xs:simpleType>
+        <xs:restriction base="xs:integer">
+          <xs:minInclusive value="0"/>
+          <xs:maxInclusive value="254"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="bc">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="AL"/>
+          <xs:enumeration value="AN"/>
+          <xs:enumeration value="B "/>
+          <xs:enumeration value="BN"/>
+          <xs:enumeration value="CS"/>
+          <xs:enumeration value="EN"/>
+          <xs:enumeration value="ES"/>
+          <xs:enumeration value="ET"/>
+          <xs:enumeration value="FSI"/>
+          <xs:enumeration value="L"/>
+          <xs:enumeration value="LRE"/>
+          <xs:enumeration value="LRI"/>
+          <xs:enumeration value="LRO"/>
+          <xs:enumeration value="NSM"/>
+          <xs:enumeration value="ON"/>
+          <xs:enumeration value="PDF"/>
+          <xs:enumeration value="PDI"/>
+          <xs:enumeration value="R"/>
+          <xs:enumeration value="RLE"/>
+          <xs:enumeration value="RLI"/>
+          <xs:enumeration value="RLO"/>
+          <xs:enumeration value="S"/>
+          <xs:enumeration value="WS"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Bidi_M" type="ucd:boolean"/>
+    <xs:attribute name="bmg">
+      <xs:simpleType>
+        <xs:union memberTypes="ucd:single-code-point">
+          <xs:simpleType>
+            <xs:restriction base="xs:token">
+              <xs:enumeration value=""/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:union>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Bidi_C" type="ucd:boolean"/>
+    <xs:attribute name="bpt">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="o"/>
+          <xs:enumeration value="c"/>
+          <xs:enumeration value="n"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="bpb">
+      <xs:simpleType>
+        <xs:union memberTypes="ucd:single-code-point">
+          <xs:simpleType>
+            <xs:restriction base="xs:token">
+              <xs:enumeration value="#"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:union>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="dt">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="can"/>
+          <xs:enumeration value="com"/>
+          <xs:enumeration value="enc"/>
+          <xs:enumeration value="fin"/>
+          <xs:enumeration value="font"/>
+          <xs:enumeration value="fra"/>
+          <xs:enumeration value="init"/>
+          <xs:enumeration value="iso"/>
+          <xs:enumeration value="med"/>
+          <xs:enumeration value="nar"/>
+          <xs:enumeration value="nb"/>
+          <xs:enumeration value="sml"/>
+          <xs:enumeration value="sqr"/>
+          <xs:enumeration value="sub"/>
+          <xs:enumeration value="sup"/>
+          <xs:enumeration value="vert"/>
+          <xs:enumeration value="wide"/>
+          <xs:enumeration value="none"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="dm">
+      <xs:simpleType>
+        <xs:union memberTypes="ucd:zero-or-more-code-points">
+          <xs:simpleType>
+            <xs:restriction base="xs:token">
+              <xs:enumeration value="#"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:union>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="CE" type="ucd:boolean"/>
+    <xs:attribute name="Comp_Ex" type="ucd:boolean"/>
+    <xs:attribute name="NFC_QC">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="Y"/>
+          <xs:enumeration value="N"/>
+          <xs:enumeration value="M"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="NFD_QC">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="Y"/>
+          <xs:enumeration value="N"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="NFKC_QC">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="Y"/>
+          <xs:enumeration value="N"/>
+          <xs:enumeration value="M"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="NFKD_QC">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="Y"/>
+          <xs:enumeration value="N"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="XO_NFC" type="ucd:boolean"/>
+    <xs:attribute name="XO_NFD" type="ucd:boolean"/>
+    <xs:attribute name="XO_NFKC" type="ucd:boolean"/>
+    <xs:attribute name="XO_NFKD" type="ucd:boolean"/>
+    <xs:attribute name="FC_NFKC">
+      <xs:simpleType>
+        <xs:union memberTypes="ucd:one-or-more-code-points">
+          <xs:simpleType>
+            <xs:restriction base="xs:token">
+              <xs:enumeration value="#"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:union>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="nt">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="None"/>
+          <xs:enumeration value="De"/>
+          <xs:enumeration value="Di"/>
+          <xs:enumeration value="Nu"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="nv">
+      <xs:simpleType>
+        <xs:union>
+          <xs:simpleType>
+            <xs:restriction base="xs:token">
+              <xs:enumeration value="NaN"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="-?[0-9]+(/[0-9]+)?"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:union>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="jt">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="U"/>
+          <xs:enumeration value="C"/>
+          <xs:enumeration value="T"/>
+          <xs:enumeration value="D"/>
+          <xs:enumeration value="L"/>
+          <xs:enumeration value="R"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="jg">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="African_Feh"/>
+          <xs:enumeration value="African_Noon"/>
+          <xs:enumeration value="African_Qaf"/>
+          <xs:enumeration value="Ain"/>
+          <xs:enumeration value="Alaph"/>
+          <xs:enumeration value="Alef"/>
+          <xs:enumeration value="Alef_Maqsurah"/>
+          <xs:enumeration value="Beh"/>
+          <xs:enumeration value="Beth"/>
+          <xs:enumeration value="Burushaski_Yeh_Barree"/>
+          <xs:enumeration value="Dal"/>
+          <xs:enumeration value="Dalath_Rish"/>
+          <xs:enumeration value="E"/>
+          <xs:enumeration value="Farsi_Yeh"/>
+          <xs:enumeration value="Fe"/>
+          <xs:enumeration value="Feh"/>
+          <xs:enumeration value="Final_Semkath"/>
+          <xs:enumeration value="Gaf"/>
+          <xs:enumeration value="Gamal"/>
+          <xs:enumeration value="Hah"/>
+          <xs:enumeration value="Hamza_On_Heh_Goal"/>
+          <xs:enumeration value="He"/>
+          <xs:enumeration value="Heh"/>
+          <xs:enumeration value="Heh_Goal"/>
+          <xs:enumeration value="Heth"/>
+          <xs:enumeration value="Kaf"/>
+          <xs:enumeration value="Kaph"/>
+          <xs:enumeration value="Khaph"/>
+          <xs:enumeration value="Knotted_Heh"/>
+          <xs:enumeration value="Lam"/>
+          <xs:enumeration value="Lamadh"/>
+          <xs:enumeration value="Manichaean_Aleph"/>
+          <xs:enumeration value="Manichaean_Ayin"/>
+          <xs:enumeration value="Manichaean_Beth"/>
+          <xs:enumeration value="Manichaean_Daleth"/>
+          <xs:enumeration value="Manichaean_Dhamedh"/>
+          <xs:enumeration value="Manichaean_Five"/>
+          <xs:enumeration value="Manichaean_Gimel"/>
+          <xs:enumeration value="Manichaean_Heth"/>
+          <xs:enumeration value="Manichaean_Hundred"/>
+          <xs:enumeration value="Manichaean_Kaph"/>
+          <xs:enumeration value="Manichaean_Lamedh"/>
+          <xs:enumeration value="Manichaean_Mem"/>
+          <xs:enumeration value="Manichaean_Nun"/>
+          <xs:enumeration value="Manichaean_One"/>
+          <xs:enumeration value="Manichaean_Pe"/>
+          <xs:enumeration value="Manichaean_Qoph"/>
+          <xs:enumeration value="Manichaean_Resh"/>
+          <xs:enumeration value="Manichaean_Sadhe"/>
+          <xs:enumeration value="Manichaean_Samekh"/>
+          <xs:enumeration value="Manichaean_Taw"/>
+          <xs:enumeration value="Manichaean_Ten"/>
+          <xs:enumeration value="Manichaean_Teth"/>
+          <xs:enumeration value="Manichaean_Thamedh"/>
+          <xs:enumeration value="Manichaean_Twenty"/>
+          <xs:enumeration value="Manichaean_Waw"/>
+          <xs:enumeration value="Manichaean_Yodh"/>
+          <xs:enumeration value="Manichaean_Zayin"/>
+          <xs:enumeration value="Meem"/>
+          <xs:enumeration value="Mim"/>
+          <xs:enumeration value="No_Joining_Group"/>
+          <xs:enumeration value="Noon"/>
+          <xs:enumeration value="Nun"/>
+          <xs:enumeration value="Nya"/>
+          <xs:enumeration value="Pe"/>
+          <xs:enumeration value="Qaf"/>
+          <xs:enumeration value="Qaph"/>
+          <xs:enumeration value="Reh"/>
+          <xs:enumeration value="Reversed_Pe"/>
+          <xs:enumeration value="Rohingya_Yeh"/>
+          <xs:enumeration value="Sad"/>
+          <xs:enumeration value="Sadhe"/>
+          <xs:enumeration value="Seen"/>
+          <xs:enumeration value="Semkath"/>
+          <xs:enumeration value="Shin"/>
+          <xs:enumeration value="Straight_Waw"/>
+          <xs:enumeration value="Swash_Kaf"/>
+          <xs:enumeration value="Syriac_Waw"/>
+          <xs:enumeration value="Tah"/>
+          <xs:enumeration value="Taw"/>
+          <xs:enumeration value="Teh_Marbuta"/>
+          <xs:enumeration value="Teh_Marbuta_Goal"/>
+          <xs:enumeration value="Teth"/>
+          <xs:enumeration value="Waw"/>
+          <xs:enumeration value="Yeh"/>
+          <xs:enumeration value="Yeh_Barree"/>
+          <xs:enumeration value="Yeh_With_Tail"/>
+          <xs:enumeration value="Yudh"/>
+          <xs:enumeration value="Yudh_He"/>
+          <xs:enumeration value="Zain"/>
+          <xs:enumeration value="Zhain"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Join_C" type="ucd:boolean"/>
+    <xs:attribute name="lb">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="AI"/>
+          <xs:enumeration value="AL"/>
+          <xs:enumeration value="B2"/>
+          <xs:enumeration value="BA"/>
+          <xs:enumeration value="BB"/>
+          <xs:enumeration value="BK"/>
+          <xs:enumeration value="CB"/>
+          <xs:enumeration value="CJ"/>
+          <xs:enumeration value="CL"/>
+          <xs:enumeration value="CM"/>
+          <xs:enumeration value="CP"/>
+          <xs:enumeration value="CR"/>
+          <xs:enumeration value="EB"/>
+          <xs:enumeration value="EM"/>
+          <xs:enumeration value="EX"/>
+          <xs:enumeration value="GL"/>
+          <xs:enumeration value="H2"/>
+          <xs:enumeration value="H3"/>
+          <xs:enumeration value="HL"/>
+          <xs:enumeration value="HY"/>
+          <xs:enumeration value="ID"/>
+          <xs:enumeration value="IN"/>
+          <xs:enumeration value="IS"/>
+          <xs:enumeration value="JL"/>
+          <xs:enumeration value="JT"/>
+          <xs:enumeration value="JV"/>
+          <xs:enumeration value="LF"/>
+          <xs:enumeration value="NL"/>
+          <xs:enumeration value="NS"/>
+          <xs:enumeration value="NU"/>
+          <xs:enumeration value="OP"/>
+          <xs:enumeration value="PO"/>
+          <xs:enumeration value="PR"/>
+          <xs:enumeration value="QU"/>
+          <xs:enumeration value="RI"/>
+          <xs:enumeration value="SA"/>
+          <xs:enumeration value="SG"/>
+          <xs:enumeration value="SP"/>
+          <xs:enumeration value="SY"/>
+          <xs:enumeration value="WJ"/>
+          <xs:enumeration value="XX"/>
+          <xs:enumeration value="ZW"/>
+          <xs:enumeration value="ZWJ"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="ea">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="A"/>
+          <xs:enumeration value="F"/>
+          <xs:enumeration value="H"/>
+          <xs:enumeration value="N"/>
+          <xs:enumeration value="Na"/>
+          <xs:enumeration value="W"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Upper" type="ucd:boolean"/>
+    <xs:attribute name="Lower" type="ucd:boolean"/>
+    <xs:attribute name="OUpper" type="ucd:boolean"/>
+    <xs:attribute name="OLower" type="ucd:boolean"/>
+    <xs:attribute name="suc">
+      <xs:simpleType>
+        <xs:union memberTypes="ucd:single-code-point">
+          <xs:simpleType>
+            <xs:restriction base="xs:token">
+              <xs:enumeration value="#"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:union>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="slc">
+      <xs:simpleType>
+        <xs:union memberTypes="ucd:single-code-point">
+          <xs:simpleType>
+            <xs:restriction base="xs:token">
+              <xs:enumeration value="#"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:union>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="stc">
+      <xs:simpleType>
+        <xs:union memberTypes="ucd:single-code-point">
+          <xs:simpleType>
+            <xs:restriction base="xs:token">
+              <xs:enumeration value="#"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:union>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="uc">
+      <xs:simpleType>
+        <xs:union memberTypes="ucd:one-or-more-code-points">
+          <xs:simpleType>
+            <xs:restriction base="xs:token">
+              <xs:enumeration value="#"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:union>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="lc">
+      <xs:simpleType>
+        <xs:union memberTypes="ucd:one-or-more-code-points">
+          <xs:simpleType>
+            <xs:restriction base="xs:token">
+              <xs:enumeration value="#"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:union>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="tc">
+      <xs:simpleType>
+        <xs:union memberTypes="ucd:one-or-more-code-points">
+          <xs:simpleType>
+            <xs:restriction base="xs:token">
+              <xs:enumeration value="#"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:union>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="scf">
+      <xs:simpleType>
+        <xs:union memberTypes="ucd:single-code-point">
+          <xs:simpleType>
+            <xs:restriction base="xs:token">
+              <xs:enumeration value="#"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:union>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="cf">
+      <xs:simpleType>
+        <xs:union memberTypes="ucd:one-or-more-code-points">
+          <xs:simpleType>
+            <xs:restriction base="xs:token">
+              <xs:enumeration value="#"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:union>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="CI" type="ucd:boolean"/>
+    <xs:attribute name="Cased" type="ucd:boolean"/>
+    <xs:attribute name="CWCF" type="ucd:boolean"/>
+    <xs:attribute name="CWCM" type="ucd:boolean"/>
+    <xs:attribute name="CWL" type="ucd:boolean"/>
+    <xs:attribute name="CWKCF" type="ucd:boolean"/>
+    <xs:attribute name="CWT" type="ucd:boolean"/>
+    <xs:attribute name="CWU" type="ucd:boolean"/>
+    <xs:attribute name="NFKC_CF">
+      <xs:simpleType>
+        <xs:union memberTypes="ucd:zero-or-more-code-points">
+          <xs:simpleType>
+            <xs:restriction base="xs:token">
+              <xs:enumeration value="#"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:union>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="sc" type="ucd:script"/>
+    <xs:attribute name="scx">
+      <xs:simpleType>
+        <xs:restriction>
+          <xs:simpleType>
+            <xs:list itemType="ucd:script"/>
+          </xs:simpleType>
+          <xs:minLength value="1"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="isc"/>
+    <xs:attribute name="hst">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="L"/>
+          <xs:enumeration value="LV"/>
+          <xs:enumeration value="LVT"/>
+          <xs:enumeration value="T"/>
+          <xs:enumeration value="V"/>
+          <xs:enumeration value="NA"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="JSN">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[A-Z]{0,3}"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="InSC">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="Avagraha"/>
+          <xs:enumeration value="Bindu"/>
+          <xs:enumeration value="Brahmi_Joining_Number"/>
+          <xs:enumeration value="Cantillation_Mark"/>
+          <xs:enumeration value="Consonant"/>
+          <xs:enumeration value="Consonant_Dead"/>
+          <xs:enumeration value="Consonant_Final"/>
+          <xs:enumeration value="Consonant_Head_Letter"/>
+          <xs:enumeration value="Consonant_Killer"/>
+          <xs:enumeration value="Consonant_Medial"/>
+          <xs:enumeration value="Consonant_Placeholder"/>
+          <xs:enumeration value="Consonant_Preceding_Repha"/>
+          <xs:enumeration value="Consonant_Prefixed"/>
+          <xs:enumeration value="Consonant_Repha"/>
+          <xs:enumeration value="Consonant_Subjoined"/>
+          <xs:enumeration value="Consonant_Succeeding_Repha"/>
+          <xs:enumeration value="Consonant_With_Stacker"/>
+          <xs:enumeration value="Gemination_Mark"/>
+          <xs:enumeration value="Invisible_Stacker"/>
+          <xs:enumeration value="Joiner"/>
+          <xs:enumeration value="Modifying_Letter"/>
+          <xs:enumeration value="Non_Joiner"/>
+          <xs:enumeration value="Nukta"/>
+          <xs:enumeration value="Number"/>
+          <xs:enumeration value="Number_Joiner"/>
+          <xs:enumeration value="Other"/>
+          <xs:enumeration value="Pure_Killer"/>
+          <xs:enumeration value="Register_Shifter"/>
+          <xs:enumeration value="Syllable_Modifier"/>
+          <xs:enumeration value="Tone_Letter"/>
+          <xs:enumeration value="Tone_Mark"/>
+          <xs:enumeration value="Virama"/>
+          <xs:enumeration value="Visarga"/>
+          <xs:enumeration value="Vowel"/>
+          <xs:enumeration value="Vowel_Dependent"/>
+          <xs:enumeration value="Vowel_Independent"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="InMC">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="Right"/>
+          <xs:enumeration value="Left"/>
+          <xs:enumeration value="Visual_Order_Left"/>
+          <xs:enumeration value="Left_And_Right"/>
+          <xs:enumeration value="Top"/>
+          <xs:enumeration value="Bottom"/>
+          <xs:enumeration value="Top_And_Bottom"/>
+          <xs:enumeration value="Top_And_Right"/>
+          <xs:enumeration value="Top_And_Left"/>
+          <xs:enumeration value="Top_And_Left_And_Right"/>
+          <xs:enumeration value="Bottom_And_Right"/>
+          <xs:enumeration value="Top_And_Bottom_And_Right"/>
+          <xs:enumeration value="Overstruck"/>
+          <xs:enumeration value="Invisible"/>
+          <xs:enumeration value="NA"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="InPC">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="Bottom"/>
+          <xs:enumeration value="Bottom_And_Right"/>
+          <xs:enumeration value="Left"/>
+          <xs:enumeration value="Left_And_Right"/>
+          <xs:enumeration value="NA"/>
+          <xs:enumeration value="Overstruck"/>
+          <xs:enumeration value="Right"/>
+          <xs:enumeration value="Top"/>
+          <xs:enumeration value="Top_And_Bottom"/>
+          <xs:enumeration value="Top_And_Bottom_And_Right"/>
+          <xs:enumeration value="Top_And_Left"/>
+          <xs:enumeration value="Top_And_Left_And_Right"/>
+          <xs:enumeration value="Top_And_Right"/>
+          <xs:enumeration value="Visual_Order_Left"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="IDS" type="ucd:boolean"/>
+    <xs:attribute name="OIDS" type="ucd:boolean"/>
+    <xs:attribute name="XIDS" type="ucd:boolean"/>
+    <xs:attribute name="IDC" type="ucd:boolean"/>
+    <xs:attribute name="OIDC" type="ucd:boolean"/>
+    <xs:attribute name="XIDC" type="ucd:boolean"/>
+    <xs:attribute name="Pat_Syn" type="ucd:boolean"/>
+    <xs:attribute name="Pat_WS" type="ucd:boolean"/>
+    <xs:attribute name="Dash" type="ucd:boolean"/>
+    <xs:attribute name="Hyphen" type="ucd:boolean"/>
+    <xs:attribute name="QMark" type="ucd:boolean"/>
+    <xs:attribute name="Term" type="ucd:boolean"/>
+    <xs:attribute name="STerm" type="ucd:boolean"/>
+    <xs:attribute name="Dia" type="ucd:boolean"/>
+    <xs:attribute name="Ext" type="ucd:boolean"/>
+    <xs:attribute name="PCM" type="ucd:boolean"/>
+    <xs:attribute name="SD" type="ucd:boolean"/>
+    <xs:attribute name="Alpha" type="ucd:boolean"/>
+    <xs:attribute name="OAlpha" type="ucd:boolean"/>
+    <xs:attribute name="Math" type="ucd:boolean"/>
+    <xs:attribute name="OMath" type="ucd:boolean"/>
+    <xs:attribute name="Hex" type="ucd:boolean"/>
+    <xs:attribute name="AHex" type="ucd:boolean"/>
+    <xs:attribute name="DI" type="ucd:boolean"/>
+    <xs:attribute name="ODI" type="ucd:boolean"/>
+    <xs:attribute name="LOE" type="ucd:boolean"/>
+    <xs:attribute name="WSpace" type="ucd:boolean"/>
+    <xs:attribute name="Gr_Base" type="ucd:boolean"/>
+    <xs:attribute name="Gr_Ext" type="ucd:boolean"/>
+    <xs:attribute name="OGr_Ext" type="ucd:boolean"/>
+    <xs:attribute name="Gr_Link" type="ucd:boolean"/>
+    <xs:attribute name="GCB">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="CN"/>
+          <xs:enumeration value="CR"/>
+          <xs:enumeration value="EB"/>
+          <xs:enumeration value="EBG"/>
+          <xs:enumeration value="EM"/>
+          <xs:enumeration value="EX"/>
+          <xs:enumeration value="GAZ"/>
+          <xs:enumeration value="L"/>
+          <xs:enumeration value="LF"/>
+          <xs:enumeration value="LV"/>
+          <xs:enumeration value="LVT"/>
+          <xs:enumeration value="PP"/>
+          <xs:enumeration value="RI"/>
+          <xs:enumeration value="SM"/>
+          <xs:enumeration value="T"/>
+          <xs:enumeration value="V"/>
+          <xs:enumeration value="XX"/>
+          <xs:enumeration value="ZWJ"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="WB">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="CR"/>
+          <xs:enumeration value="DQ"/>
+          <xs:enumeration value="EB"/>
+          <xs:enumeration value="EBG"/>
+          <xs:enumeration value="EM"/>
+          <xs:enumeration value="EX"/>
+          <xs:enumeration value="Extend"/>
+          <xs:enumeration value="FO"/>
+          <xs:enumeration value="GAZ"/>
+          <xs:enumeration value="HL"/>
+          <xs:enumeration value="KA"/>
+          <xs:enumeration value="LE"/>
+          <xs:enumeration value="LF"/>
+          <xs:enumeration value="MB"/>
+          <xs:enumeration value="ML"/>
+          <xs:enumeration value="MN"/>
+          <xs:enumeration value="NL"/>
+          <xs:enumeration value="NU"/>
+          <xs:enumeration value="RI"/>
+          <xs:enumeration value="SQ"/>
+          <xs:enumeration value="XX"/>
+          <xs:enumeration value="ZWJ"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="SB">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:enumeration value="AT"/>
+          <xs:enumeration value="CL"/>
+          <xs:enumeration value="CR"/>
+          <xs:enumeration value="EX"/>
+          <xs:enumeration value="FO"/>
+          <xs:enumeration value="LE"/>
+          <xs:enumeration value="LF"/>
+          <xs:enumeration value="LO"/>
+          <xs:enumeration value="NU"/>
+          <xs:enumeration value="SC"/>
+          <xs:enumeration value="SE"/>
+          <xs:enumeration value="SP"/>
+          <xs:enumeration value="ST"/>
+          <xs:enumeration value="UP"/>
+          <xs:enumeration value="XX"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="Ideo" type="ucd:boolean"/>
+    <xs:attribute name="UIdeo" type="ucd:boolean"/>
+    <xs:attribute name="IDSB" type="ucd:boolean"/>
+    <xs:attribute name="IDST" type="ucd:boolean"/>
+    <xs:attribute name="Radical" type="ucd:boolean"/>
+    <xs:attribute name="Dep" type="ucd:boolean"/>
+    <xs:attribute name="VS" type="ucd:boolean"/>
+    <xs:attribute name="NChar" type="ucd:boolean"/>
+    <xs:attribute name="kAccountingNumeric">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[0-9]+"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kAlternateHanYu"/>
+    <xs:attribute name="kAlternateJEF"/>
+    <xs:attribute name="kAlternateKangXi"/>
+    <xs:attribute name="kAlternateMorohashi"/>
+    <xs:attribute name="kBigFive">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[0-9A-F]{4}"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kCCCII">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[0-9A-F]{6}"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kCNS1986">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[12E]-[0-9A-F]{4}"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kCNS1992">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[123]-[0-9A-F]{4}"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kCangjie">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[A-Z]+"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kCantonese">
+      <xs:simpleType>
+        <xs:restriction>
+          <xs:simpleType>
+            <xs:list>
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:pattern value="[a-z]+[1-6]"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:list>
+          </xs:simpleType>
+          <xs:minLength value="1"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kCheungBauer"/>
+    <xs:attribute name="kCheungBauerIndex">
+      <xs:simpleType>
+        <xs:restriction>
+          <xs:simpleType>
+            <xs:list>
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:pattern value="[0-9]{3}\.[0-9]{2}"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:list>
+          </xs:simpleType>
+          <xs:minLength value="1"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kCihaiT">
+      <xs:simpleType>
+        <xs:restriction>
+          <xs:simpleType>
+            <xs:list>
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:pattern value="[1-9][0-9]{0,3}\.[0-9]{3}"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:list>
+          </xs:simpleType>
+          <xs:minLength value="1"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kCompatibilityVariant">
+      <xs:simpleType>
+        <xs:union>
+          <xs:simpleType>
+            <xs:restriction base="xs:token">
+              <xs:enumeration value=""/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="U\+2?[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:union>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kCowles">
+      <xs:simpleType>
+        <xs:restriction>
+          <xs:simpleType>
+            <xs:list>
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:pattern value="[0-9]{1,4}(\.[0-9]{1,2})?"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:list>
+          </xs:simpleType>
+          <xs:minLength value="1"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kDaeJaweon">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[0-9]{4}\.[0-9]{2}[0158]"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kDefinition"/>
+    <xs:attribute name="kEACC">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[0-9A-F]{6}"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kFenn">
+      <xs:simpleType>
+        <xs:restriction>
+          <xs:simpleType>
+            <xs:list>
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:pattern value="[0-9]+a?[A-KP*]"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:list>
+          </xs:simpleType>
+          <xs:minLength value="1"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kFennIndex">
+      <xs:simpleType>
+        <xs:restriction>
+          <xs:simpleType>
+            <xs:list>
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:pattern value="[0-9][0-9]{0,2}\.[01][0-9]"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:list>
+          </xs:simpleType>
+          <xs:minLength value="1"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kFourCornerCode">
+      <xs:simpleType>
+        <xs:restriction>
+          <xs:simpleType>
+            <xs:list>
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:pattern value="[0-9]{4}(\.[0-9])?"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:list>
+          </xs:simpleType>
+          <xs:minLength value="1"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kFrequency">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[1-5]"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kGB0">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[0-9A-F]{4}"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kGB1">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[0-9A-F]{4}"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kGB3">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[0-9A-F]{4}"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kGB5">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[0-9A-F]{4}"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kGB7">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[0-9A-F]{4}"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kGB8">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[0-9]{4}"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kGradeLevel">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[1-6]"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kGSR">
+      <xs:simpleType>
+        <xs:restriction>
+          <xs:simpleType>
+            <xs:list>
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:pattern value="[0-9]{4}[a-vx-z]'*"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:list>
+          </xs:simpleType>
+          <xs:minLength value="1"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kHangul"/>
+    <xs:attribute name="kHanYu">
+      <xs:simpleType>
+        <xs:restriction>
+          <xs:simpleType>
+            <xs:list>
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:pattern value="[1-8][0-9]{4}\.[0-9]{2}[0-3]"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:list>
+          </xs:simpleType>
+          <xs:minLength value="1"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kHanyuPinlu">
+      <xs:simpleType>
+        <xs:restriction>
+          <xs:simpleType>
+            <xs:list>
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:pattern value="[a-z̀-̂̄̈̌]+\([0-9]+\)"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:list>
+          </xs:simpleType>
+          <xs:minLength value="1"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kHanyuPinyin">
+      <xs:simpleType>
+        <xs:restriction>
+          <xs:simpleType>
+            <xs:list>
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:pattern value="([0-9]{5}\.[0-9]{2}0,)*[0-9]{5}\.[0-9]{2}0:([a-z̀-̂̄̈̌]+,)*[a-z̀-̂̄̈̌]+"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:list>
+          </xs:simpleType>
+          <xs:minLength value="1"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kHDZRadBreak">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[⼀-⿕]\[U\+2?[0-9A-F]{4}\]:[1-8][0-9]{4}\.[0-9]{2}[012]"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kHKGlyph">
+      <xs:simpleType>
+        <xs:restriction>
+          <xs:simpleType>
+            <xs:list>
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:pattern value="[0-9]{4}"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:list>
+          </xs:simpleType>
+          <xs:minLength value="1"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kHKSCS">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[0-9A-F]{4}"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kIBMJapan">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="F[ABC][0-9A-F]{2}"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kIICore">
+      <xs:simpleType>
+        <xs:union>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="[1-9]\.[1-9]"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="[ABC][GHJKMPT]{1,7}"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:union>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kIRGDaeJaweon">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="([0-9]{4}\.[0-9]{2}[01])|(0000\.555)"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kIRGDaiKanwaZiten">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[0-9]{5}'?"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kIRGHanyuDaZidian">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[1-8][0-9]{4}\.[0-3][0-9][01]"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kIRGKangXi">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[01][0-9]{3}\.[0-7][0-9][01]"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kIRG_GSource">
+      <xs:simpleType>
+        <xs:union>
+          <xs:simpleType>
+            <xs:restriction base="xs:token">
+              <xs:enumeration value=""/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="(0|1|2|3|5|7|8|9|E|S|(4K)|(BK)|(CH)|(CY)|(FZ)|(FZ_BK)|(HC)|(HZ)|(KX)|(ZJW)|(ZFY)|(CYY)|(GJZ)|(XC)|(GH))(-)?([0-9A-F]{4,6})?"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="G0-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="G1-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="G3-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="G5-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="G7-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="GS-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="G8-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="G9-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="GE-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="G4K"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="GBK"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="GBK-[0-9]{4}\.[0-9]{2}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="GCH"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="GCH-[0-9]{4}\.[0-9]{2}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="GCY"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="GCY-[0-9]{4}\.[0-9]{2}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="GCYY-[0-9]{5}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="GDZ-[0-9]{4}\.[0-9]{2}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="GFC-[0-9]{3}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="GFZ"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="GFZ-[0-9]{5}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="GGFZ-[0-9]{6}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="GGH-[0-9]{4}\.[0-9]{2}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="GHC"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="GHC-[0-9]{4}\.[0-9]{2}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="GHZ"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="GHZ-[0-9]{5}\.[0-9]{2}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="GIDC-[0-9]{3}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="GJZ-[0-9]{5}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="GK-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="GKX-[0-9]{4}\.[0-9]{2,3}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="GRM-[0-9]{4}\.[0-9]{2}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="GWZ-[0-9]{4}\.[0-9]{2}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="GXC-[0-9]{4}\.[0-9]{2}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="GXH-[0-9]{4}\.[0-9]{2}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="GZFY-[0-9]{5}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="GZH-[0-9]{4}\.[0-9]{2}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="GZJW-[0-9]{5}"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:union>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kIRG_HSource">
+      <xs:simpleType>
+        <xs:union>
+          <xs:simpleType>
+            <xs:restriction base="xs:token">
+              <xs:enumeration value=""/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="H-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="H3-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="HB0-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="HB1-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="HB2-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:union>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kIRG_JSource">
+      <xs:simpleType>
+        <xs:union>
+          <xs:simpleType>
+            <xs:restriction base="xs:token">
+              <xs:enumeration value=""/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="(0|1|3|(3A)|4|A|(ARIB)|K)-[0-9A-F]{4,5}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="J0-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="J1-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="J3-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="J3A-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="J4-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="J13-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="J13A-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="J14-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="JA-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="JA3-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="JA4-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="JH-[0-9A-Z]{6,7}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="JK-[0-9]{5}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="JARIB-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:union>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kIRG_KPSource">
+      <xs:simpleType>
+        <xs:union>
+          <xs:simpleType>
+            <xs:restriction base="xs:token">
+              <xs:enumeration value=""/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="((KP0)|(KP1))-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:union>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kIRG_KSource">
+      <xs:simpleType>
+        <xs:union>
+          <xs:simpleType>
+            <xs:restriction base="xs:token">
+              <xs:enumeration value=""/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="((0|1|2|3|4|5)-[0-9A-F]{4})|(KZ[0-9]{6})"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="K0-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="K1-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="K2-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="K3-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="K4-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="K5-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:union>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kIRG_MSource">
+      <xs:simpleType>
+        <xs:union>
+          <xs:simpleType>
+            <xs:restriction base="xs:token">
+              <xs:enumeration value=""/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="MAC[0-9]{5}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="MAC-[0-9]{5}"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:union>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kIRG_TSource">
+      <xs:simpleType>
+        <xs:union>
+          <xs:simpleType>
+            <xs:restriction base="xs:token">
+              <xs:enumeration value=""/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="(1-[0-9A-F]{4})|(2-[0-9A-F]{4})|(3-[0-9A-F]{4})|(4-[0-9A-F]{4})|(5-[0-9A-F]{4})|(6-[0-9A-F]{4})|(7-[0-9A-F]{4})|(F-[0-9A-F]{4})|(C-[0-9A-F]{4})|(D-[0-9A-F]{4})|(E-[0-9A-F]{4})"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="T1-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="T2-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="T3-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="T4-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="T5-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="T6-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="T7-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="TB-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="TC-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="TD-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="TE-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="TF-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:union>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kIRG_USource">
+      <xs:simpleType>
+        <xs:union>
+          <xs:simpleType>
+            <xs:restriction base="xs:token">
+              <xs:enumeration value=""/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="(U\+2?[0-9A-F]{4})|(UTC[0-9]{5})"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="UTC-[0-9]{5}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="UCI-[0-9]{5}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="USAT-[0-9]{5}"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:union>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kIRG_VSource">
+      <xs:simpleType>
+        <xs:union>
+          <xs:simpleType>
+            <xs:restriction base="xs:token">
+              <xs:enumeration value=""/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="(0|1|2|3|4)-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="V0-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="V1-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="V2-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="V3-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="V4-[0-9A-F]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:union>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kJa">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[0-9A-F]{4}S?"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kJHJ"/>
+    <xs:attribute name="kJIS0213">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[12],[0-9]{2},[0-9]{1,2}"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kJapaneseKun">
+      <xs:simpleType>
+        <xs:restriction>
+          <xs:simpleType>
+            <xs:list>
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:pattern value="[A-Z]+"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:list>
+          </xs:simpleType>
+          <xs:minLength value="1"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kJapaneseOn">
+      <xs:simpleType>
+        <xs:restriction>
+          <xs:simpleType>
+            <xs:list>
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:pattern value="[A-Z]+"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:list>
+          </xs:simpleType>
+          <xs:minLength value="1"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kJis0">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[0-9]{4}"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kJis1">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[0-9]{4}"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kKPS0">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[0-9A-F]{4}"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kKPS1">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[0-9A-F]{4}"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kKSC0">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[0-9]{4}"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kKSC1">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[0-9]{4}"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kKangXi">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[0-9]{4}\.[0-9]{2}[01]"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kKarlgren">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[1-9][0-9]{0,3}[A*]?"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kKorean">
+      <xs:simpleType>
+        <xs:restriction>
+          <xs:simpleType>
+            <xs:list>
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:pattern value="[A-Z]+"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:list>
+          </xs:simpleType>
+          <xs:minLength value="1"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kLau">
+      <xs:simpleType>
+        <xs:restriction>
+          <xs:simpleType>
+            <xs:list>
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:pattern value="[1-9][0-9]{0,3}"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:list>
+          </xs:simpleType>
+          <xs:minLength value="1"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kMainlandTelegraph">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[0-9]{4}"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kMandarin">
+      <xs:simpleType>
+        <xs:restriction>
+          <xs:simpleType>
+            <xs:list>
+              <xs:simpleType>
+                <xs:union>
+                  <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                      <xs:pattern value="[A-ZÜ̈]+[1-5]"/>
+                    </xs:restriction>
+                  </xs:simpleType>
+                  <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                      <xs:pattern value="[a-z̀́̂̄̈̌]+"/>
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:union>
+              </xs:simpleType>
+            </xs:list>
+          </xs:simpleType>
+          <xs:minLength value="1"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kMatthews">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[0-9]{1,4}(a|\.5)?"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kMeyerWempe">
+      <xs:simpleType>
+        <xs:restriction>
+          <xs:simpleType>
+            <xs:list>
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:pattern value="[1-9][0-9]{0,3}[a-t*]?"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:list>
+          </xs:simpleType>
+          <xs:minLength value="1"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kMorohashi">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[0-9]{5}'?"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kNelson">
+      <xs:simpleType>
+        <xs:restriction>
+          <xs:simpleType>
+            <xs:list>
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:pattern value="[0-9]{4}"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:list>
+          </xs:simpleType>
+          <xs:minLength value="1"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kOtherNumeric">
+      <xs:simpleType>
+        <xs:restriction>
+          <xs:simpleType>
+            <xs:list>
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:pattern value="[0-9]+"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:list>
+          </xs:simpleType>
+          <xs:minLength value="1"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kPhonetic">
+      <xs:simpleType>
+        <xs:restriction>
+          <xs:simpleType>
+            <xs:list>
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:pattern value="[1-9][0-9]{0,3}[A-D]?\*?"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:list>
+          </xs:simpleType>
+          <xs:minLength value="1"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kPrimaryNumeric">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[0-9]+"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kPseudoGB1">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[0-9]{4}"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kRSAdobe_Japan1_6">
+      <xs:simpleType>
+        <xs:restriction>
+          <xs:simpleType>
+            <xs:list>
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:pattern value="[CV]\+[0-9]{1,5}\+[1-9][0-9]{0,2}\.[1-9][0-9]?\.[0-9]{1,2}"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:list>
+          </xs:simpleType>
+          <xs:minLength value="1"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kRSJapanese">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[0-9]{1,3}\.[0-9]{1,2}"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kRSKanWa">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[0-9]{1,3}\.[0-9]{1,2}"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kRSKangXi">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[0-9]{1,3}\.\-?[0-9]{1,2}"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kRSKorean">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[0-9]{1,3}\.[0-9]{1,2}"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kRSMerged"/>
+    <xs:attribute name="kRSUnicode">
+      <xs:simpleType>
+        <xs:restriction>
+          <xs:simpleType>
+            <xs:list>
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:pattern value="[0-9]{1,3}'?\.\-?[0-9]{1,2}"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:list>
+          </xs:simpleType>
+          <xs:minLength value="1"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kSBGY">
+      <xs:simpleType>
+        <xs:restriction>
+          <xs:simpleType>
+            <xs:list>
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:pattern value="[0-9]{3}\.[0-9]{2}"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:list>
+          </xs:simpleType>
+          <xs:minLength value="1"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kSemanticVariant">
+      <xs:simpleType>
+        <xs:restriction>
+          <xs:simpleType>
+            <xs:list>
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:pattern value="U\+2?[0-9A-F]{4}(&lt;k[A-Za-z0-9]+(:[TBZJF]+)?(,k[A-Za-z0-9]+(:[TBZJF]+)?)*)?"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:list>
+          </xs:simpleType>
+          <xs:minLength value="1"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kSimplifiedVariant">
+      <xs:simpleType>
+        <xs:restriction>
+          <xs:simpleType>
+            <xs:list>
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:pattern value="U\+2?[0-9A-F]{4}"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:list>
+          </xs:simpleType>
+          <xs:minLength value="1"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kSpecializedSemanticVariant">
+      <xs:simpleType>
+        <xs:restriction>
+          <xs:simpleType>
+            <xs:list>
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:pattern value="U\+2?[0-9A-F]{4}(&lt;k[A-Za-z0-9]+(:[TBZJF]+)?(,k[A-Za-z0-9]+(:[TBZJF]+)?)*)?"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:list>
+          </xs:simpleType>
+          <xs:minLength value="1"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kTaiwanTelegraph">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[0-9]{4}"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kTang">
+      <xs:simpleType>
+        <xs:restriction>
+          <xs:simpleType>
+            <xs:list>
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:pattern value="\*?[A-Za-z\(\)æɑəɛ̀̌]+"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:list>
+          </xs:simpleType>
+          <xs:minLength value="1"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kTotalStrokes">
+      <xs:simpleType>
+        <xs:restriction>
+          <xs:simpleType>
+            <xs:list>
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:pattern value="[1-9][0-9]{0,2}"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:list>
+          </xs:simpleType>
+          <xs:minLength value="1"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kTraditionalVariant">
+      <xs:simpleType>
+        <xs:restriction>
+          <xs:simpleType>
+            <xs:list>
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:pattern value="U\+2?[0-9A-F]{4}"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:list>
+          </xs:simpleType>
+          <xs:minLength value="1"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kVietnamese">
+      <xs:simpleType>
+        <xs:restriction>
+          <xs:simpleType>
+            <xs:list>
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:pattern value="[A-Za-zà-ừ-̛̣̆̉ạ-ỹ]+"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:list>
+          </xs:simpleType>
+          <xs:minLength value="1"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kXHC1983">
+      <xs:simpleType>
+        <xs:restriction>
+          <xs:simpleType>
+            <xs:list>
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:pattern value="[0-9,.*]+:[a-zǜ́̄̈̌]+"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:list>
+          </xs:simpleType>
+          <xs:minLength value="1"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kWubi"/>
+    <xs:attribute name="kXerox">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[0-9]{3}:[0-9]{3}"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kZVariant">
+      <xs:simpleType>
+        <xs:restriction>
+          <xs:simpleType>
+            <xs:list>
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:pattern value="U\+2?[0-9A-F]{4}((&lt;k[A-Za-z0-9]+(:[TBZ]+)?(,k[A-Za-z0-9]+(:[TBZ]+)?)*)|(:k[A-Za-z]+))?"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:list>
+          </xs:simpleType>
+          <xs:minLength value="1"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kRSTUnicode">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[0-9]+\.[0-9]+"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="kTGT_MergedSrc">
+      <xs:simpleType>
+        <xs:union>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="L2008-[0-9A-F]{4,5}(-[0-9]{4,5})?"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="L2006-[0-9]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="L1997-[0-9]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="L1986-[0-9]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="S1968-[0-9]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="N1966-[0-9]{3}(-[0-9A-Z]{3,4})?"/>
+            </xs:restriction>
+          </xs:simpleType>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:pattern value="H2004-[A-Z]-[0-9]{4}"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:union>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:element name="name-alias">
+    <xs:complexType>
+      <xs:attribute name="alias"/>
+      <xs:attribute name="type">
+        <xs:simpleType>
+          <xs:restriction base="xs:token">
+            <xs:enumeration value="abbreviation"/>
+            <xs:enumeration value="alternate"/>
+            <xs:enumeration value="control"/>
+            <xs:enumeration value="correction"/>
+            <xs:enumeration value="figment"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:simpleType name="script">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="Adlm"/>
+      <xs:enumeration value="Aghb"/>
+      <xs:enumeration value="Ahom"/>
+      <xs:enumeration value="Arab"/>
+      <xs:enumeration value="Armi"/>
+      <xs:enumeration value="Armn"/>
+      <xs:enumeration value="Avst"/>
+      <xs:enumeration value="Bali"/>
+      <xs:enumeration value="Bamu"/>
+      <xs:enumeration value="Bass"/>
+      <xs:enumeration value="Batk"/>
+      <xs:enumeration value="Beng"/>
+      <xs:enumeration value="Bhks"/>
+      <xs:enumeration value="Bopo"/>
+      <xs:enumeration value="Brah"/>
+      <xs:enumeration value="Brai"/>
+      <xs:enumeration value="Bugi"/>
+      <xs:enumeration value="Buhd"/>
+      <xs:enumeration value="Cakm"/>
+      <xs:enumeration value="Cans"/>
+      <xs:enumeration value="Cari"/>
+      <xs:enumeration value="Cham"/>
+      <xs:enumeration value="Cher"/>
+      <xs:enumeration value="Copt"/>
+      <xs:enumeration value="Cprt"/>
+      <xs:enumeration value="Cyrl"/>
+      <xs:enumeration value="Deva"/>
+      <xs:enumeration value="Dsrt"/>
+      <xs:enumeration value="Dupl"/>
+      <xs:enumeration value="Elba"/>
+      <xs:enumeration value="Egyp"/>
+      <xs:enumeration value="Ethi"/>
+      <xs:enumeration value="Geor"/>
+      <xs:enumeration value="Glag"/>
+      <xs:enumeration value="Goth"/>
+      <xs:enumeration value="Gran"/>
+      <xs:enumeration value="Grek"/>
+      <xs:enumeration value="Gujr"/>
+      <xs:enumeration value="Guru"/>
+      <xs:enumeration value="Hang"/>
+      <xs:enumeration value="Hani"/>
+      <xs:enumeration value="Hano"/>
+      <xs:enumeration value="Hatr"/>
+      <xs:enumeration value="Hebr"/>
+      <xs:enumeration value="Hira"/>
+      <xs:enumeration value="Hluw"/>
+      <xs:enumeration value="Hmng"/>
+      <xs:enumeration value="Hrkt"/>
+      <xs:enumeration value="Hung"/>
+      <xs:enumeration value="Ital"/>
+      <xs:enumeration value="Java"/>
+      <xs:enumeration value="Kali"/>
+      <xs:enumeration value="Kana"/>
+      <xs:enumeration value="Khar"/>
+      <xs:enumeration value="Khmr"/>
+      <xs:enumeration value="Khoj"/>
+      <xs:enumeration value="Knda"/>
+      <xs:enumeration value="Kthi"/>
+      <xs:enumeration value="Lana"/>
+      <xs:enumeration value="Laoo"/>
+      <xs:enumeration value="Latn"/>
+      <xs:enumeration value="Lepc"/>
+      <xs:enumeration value="Limb"/>
+      <xs:enumeration value="Lina"/>
+      <xs:enumeration value="Linb"/>
+      <xs:enumeration value="Lisu"/>
+      <xs:enumeration value="Lyci"/>
+      <xs:enumeration value="Lydi"/>
+      <xs:enumeration value="Mahj"/>
+      <xs:enumeration value="Mand"/>
+      <xs:enumeration value="Mani"/>
+      <xs:enumeration value="Marc"/>
+      <xs:enumeration value="Mend"/>
+      <xs:enumeration value="Merc"/>
+      <xs:enumeration value="Mero"/>
+      <xs:enumeration value="Mlym"/>
+      <xs:enumeration value="Modi"/>
+      <xs:enumeration value="Mong"/>
+      <xs:enumeration value="Mroo"/>
+      <xs:enumeration value="Mtei"/>
+      <xs:enumeration value="Mult"/>
+      <xs:enumeration value="Mymr"/>
+      <xs:enumeration value="Narb"/>
+      <xs:enumeration value="Nbat"/>
+      <xs:enumeration value="Newa"/>
+      <xs:enumeration value="Nkoo"/>
+      <xs:enumeration value="Ogam"/>
+      <xs:enumeration value="Olck"/>
+      <xs:enumeration value="Orkh"/>
+      <xs:enumeration value="Orya"/>
+      <xs:enumeration value="Osge"/>
+      <xs:enumeration value="Osma"/>
+      <xs:enumeration value="Palm"/>
+      <xs:enumeration value="Pauc"/>
+      <xs:enumeration value="Perm"/>
+      <xs:enumeration value="Phag"/>
+      <xs:enumeration value="Phli"/>
+      <xs:enumeration value="Phlp"/>
+      <xs:enumeration value="Phnx"/>
+      <xs:enumeration value="Plrd"/>
+      <xs:enumeration value="Prti"/>
+      <xs:enumeration value="Qaai"/>
+      <xs:enumeration value="Rjng"/>
+      <xs:enumeration value="Runr"/>
+      <xs:enumeration value="Samr"/>
+      <xs:enumeration value="Sarb"/>
+      <xs:enumeration value="Saur"/>
+      <xs:enumeration value="Sgnw"/>
+      <xs:enumeration value="Shaw"/>
+      <xs:enumeration value="Shrd"/>
+      <xs:enumeration value="Sidd"/>
+      <xs:enumeration value="Sind"/>
+      <xs:enumeration value="Sinh"/>
+      <xs:enumeration value="Sora"/>
+      <xs:enumeration value="Sund"/>
+      <xs:enumeration value="Sylo"/>
+      <xs:enumeration value="Syrc"/>
+      <xs:enumeration value="Tagb"/>
+      <xs:enumeration value="Takr"/>
+      <xs:enumeration value="Tale"/>
+      <xs:enumeration value="Talu"/>
+      <xs:enumeration value="Taml"/>
+      <xs:enumeration value="Tang"/>
+      <xs:enumeration value="Tavt"/>
+      <xs:enumeration value="Telu"/>
+      <xs:enumeration value="Tfng"/>
+      <xs:enumeration value="Tglg"/>
+      <xs:enumeration value="Thaa"/>
+      <xs:enumeration value="Thai"/>
+      <xs:enumeration value="Tibt"/>
+      <xs:enumeration value="Tirh"/>
+      <xs:enumeration value="Ugar"/>
+      <xs:enumeration value="Vaii"/>
+      <xs:enumeration value="Wara"/>
+      <xs:enumeration value="Xpeo"/>
+      <xs:enumeration value="Xsux"/>
+      <xs:enumeration value="Yiii"/>
+      <xs:enumeration value="Zinh"/>
+      <xs:enumeration value="Zyyy"/>
+      <xs:enumeration value="Zzzz"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- old -->
+  <!-- old -->
+</xs:schema>

@@ -1,3 +1,4 @@
 logging.level:
   org.unicodetool: DEBUG
+  org.springframework.cache: TRACE
   graphql: DEBUG

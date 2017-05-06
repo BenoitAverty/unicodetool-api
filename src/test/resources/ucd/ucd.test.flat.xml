@@ -1,0 +1,32 @@
+<ucd xmlns="http://www.unicode.org/ns/2003/ucd/1.0">
+
+    <repertoire>
+        <char cp="001F" age="1.1" na="&lt;control&gt;" na1="UNIT SEPARATOR"
+              gc="Cc" bc="S" lb="CM"/>
+
+        <char cp="0020" age="1.1" na="SPACE" gc="Zs" bc="WS" ea="Na" lb="SP"/>
+
+        <char cp="0026" age="1.1" na="AMPERSAND" gc="Po" bc="ON" ea="Na"/>
+
+        <char cp="0028" age="1.1" na="LEFT PARENTHESIS" na1="OPENING PARENTHESIS"
+              gc="Ps" bc="ON" Bidi_M="y" bmg="0029" ea="Na" lb="OP"/>
+
+        <char cp="0041" age="1.1" na="LATIN CAPITAL LETTER A"
+              gc="Lu" slc="0061" ea="Na" sc="Latn" blk="ASCII"/>
+
+        <char cp="AC00" age="2.0" na="HANGUL SYLLABLE GA" gc="Lo"
+              dt="can" dm="1100 1161" ea="W" lb="ID" sc="Hang"/>
+
+        <char cp="20094" age="3.1" na="CJK UNIFIED IDEOGRAPH-20094"
+              gc="Lo" ea="W" lb="ID" sc="Hani" kIRG_GSource="KX"
+              kIRGHanyuDaZidian="10036.060" kIRG_TSource="5-214E"
+              kRSUnicode="4.3" kIRGKangXi="0082.090"/>
+
+        <char cp="1740" na="BUHID LETTER A" age="3.2" gc="Lo" sc="Buhd"/>
+        <char cp="1741" na="BUHID LETTER I" age="3.2" gc="Lo" sc="Buhd"/>
+        <char cp="1752" na="BUHID VOWEL SIGN I" gc="Mn" age="3.2" sc="Buhd"/>
+        <char cp="1820" age="3.0" na="MONGOLIAN LETTER A" sc="Mong" gc="Lo" />
+
+
+    </repertoire>
+</ucd>
