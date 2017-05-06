@@ -2,6 +2,7 @@ package org.unicodetool.application;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.unicodetool.application.exceptions.CodepointFormatException;
 import org.unicodetool.application.exceptions.ValueOutsideRangeException;
 import org.unicodetool.graphql.schema.Codepoint;
 import org.unicodetool.graphql.schema.Properties;
@@ -45,5 +46,30 @@ public class CodepointQueryHandler {
                                 xmlCodepoint.getBlk()
                         )
                 ));
+    }
+
+    /**
+     * Find a codepoint by its string value.
+     *
+     * @param valueStr The string value of the codepoint.
+     * @return The codepoint represented by a graphql object.
+     * @throws ValueOutsideRangeException if the value is negative or greater than the maximum codepoint.
+     * @throws CodepointFormatException if the given string has an incorrect format.
+     */
+    public Optional<Codepoint> findCodepoint(String valueStr) {
+
+
+
+        try {
+            Integer value = Optional.ofNullable(valueStr)
+                    .map(s -> s.startsWith("U+") ? s.substring(2) : s)
+                    .map(s -> s.startsWith("0x") ? s.substring(2) : s)
+                    .map(s -> Integer.valueOf(s, 16))
+                    .orElseThrow(() -> new CodepointFormatException(valueStr));
+            return this.findCodepoint(value);
+        }
+        catch (NumberFormatException e) {
+            throw new CodepointFormatException(valueStr, e);
+        }
     }
 }
