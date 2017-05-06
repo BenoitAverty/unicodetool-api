@@ -3,6 +3,7 @@ package org.unicodetool.graphql.schema;
 import com.coxautodev.graphql.tools.GraphQLRootResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.unicodetool.application.CodepointQueryHandler;
 import org.unicodetool.graphql.exceptions.CodepointNotFound;
 import org.unicodetool.ucd.UnicodeCharacterDatabaseFinder;
 import org.unicodetool.ucd.schema.CodePoint;
@@ -13,24 +14,15 @@ import java.util.List;
 @Component
 public class Query implements GraphQLRootResolver {
 
-    private final UnicodeCharacterDatabaseFinder unicodeCharacterDatabaseFinder;
+    private final CodepointQueryHandler codepointQueryHandler;
 
     @Autowired
-    public Query(UnicodeCharacterDatabaseFinder ucdf) {
-        this.unicodeCharacterDatabaseFinder = ucdf;
+    public Query(CodepointQueryHandler cqh) {
+        this.codepointQueryHandler = cqh;
     }
 
     public Codepoint codepoint(int value) {
-        CodePoint cp = unicodeCharacterDatabaseFinder.findCodepoint(value).orElseThrow(CodepointNotFound::new);
-
-        return new Codepoint(
-                value,
-                cp.getNa(),
-                new Properties(
-                        cp.getNa(),
-                        cp.getBlk()
-                )
-        );
+        return codepointQueryHandler.findCodepoint(value).orElseThrow(CodepointNotFound::new);
     }
 
     public List<Codepoint> codepoints() {
