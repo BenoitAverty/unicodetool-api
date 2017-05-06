@@ -1,0 +1,6 @@
+logging.level:
+  org.unicodetool: DEBUG
+  org.springframework.cache: TRACE
+  graphql: DEBUG
+management:
+  security.enabled: false

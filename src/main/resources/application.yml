@@ -1,4 +1,2 @@
-logging.level:
-  org.unicodetool: DEBUG
-  org.springframework.cache: TRACE
-  graphql: DEBUG
+management:
+  context-path: /manage
