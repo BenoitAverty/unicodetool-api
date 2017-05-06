@@ -10,6 +10,7 @@ import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.unicodetool.application.CodepointQueryHandler;
+import org.unicodetool.application.exceptions.ValueOutsideRangeException;
 import org.unicodetool.graphql.schema.Codepoint;
 import org.unicodetool.ucd.UnicodeCharacterDatabaseFinder;
 
@@ -50,10 +51,10 @@ public class CodepointQueryHandlerTest {
         public void findExistingCodepoint() {
             final String expectedName = "LATIN CAPITAL LETTER A";
             final String expectedBlock = "ASCII";
+
             final Optional<Codepoint> actual = codepointQueryHandler.findCodepoint(65);
 
             assertTrue(actual.isPresent(), "Codepoint was not found");
-
             assertAll("Returned codepoint is not correct",
                     () -> assertEquals(65, actual.get().getValue(),
                             "Incorrect value."),
@@ -62,6 +63,18 @@ public class CodepointQueryHandlerTest {
                     () -> assertEquals(expectedBlock, actual.get().getProperties().getBlock(),
                             "Incorrect block.")
             );
+        }
+
+        @Test
+        @DisplayName("Value outside range")
+        public void findOutsideRange() {
+            assertThrows(ValueOutsideRangeException.class, () -> codepointQueryHandler.findCodepoint(1114112));
+        }
+
+        @Test
+        @DisplayName("Negative value")
+        public void findNegative() {
+            assertThrows(ValueOutsideRangeException.class, () -> codepointQueryHandler.findCodepoint(-1));
         }
     }
 

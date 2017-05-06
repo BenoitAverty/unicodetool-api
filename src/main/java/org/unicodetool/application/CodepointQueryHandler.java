@@ -2,6 +2,7 @@ package org.unicodetool.application;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.unicodetool.application.exceptions.ValueOutsideRangeException;
 import org.unicodetool.graphql.schema.Codepoint;
 import org.unicodetool.graphql.schema.Properties;
 import org.unicodetool.ucd.UnicodeCharacterDatabaseFinder;
@@ -27,8 +28,13 @@ public class CodepointQueryHandler {
      *
      * @param value The integer value of the codepoint.
      * @return The codepoint represented by a graphql object.
+     * @throws ValueOutsideRangeException if the value is negative or greater than the maximum codepoint.
      */
     public Optional<Codepoint> findCodepoint(int value) {
+
+        if(value > 0x10FFFF || value < 0) {
+            throw new ValueOutsideRangeException("The value of a codepoint must be between 0 and 0x10FFFF (1114111) inclusive");
+        }
 
         return unicodeCharacterDatabaseFinder.findCodepoint(value)
                 .map(xmlCodepoint -> new Codepoint(
