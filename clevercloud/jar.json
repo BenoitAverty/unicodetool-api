@@ -4,6 +4,6 @@
     "goal": "bootJar"
   },
   "deploy": {
-    "jarName": "build/libs/unicodetool-server-1.0.0.jar"
+    "jarName": "./build/libs/unicodetool-server-1.0.0.jar"
   }
 }
