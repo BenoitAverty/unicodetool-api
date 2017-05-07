@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -22,6 +24,7 @@ import javax.swing.text.html.Option;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Optional;
 
@@ -38,10 +41,15 @@ public class CodepointQueryHandlerTest {
         Jaxb2Marshaller m = new Jaxb2Marshaller();
         m.setPackagesToScan("org.unicodetool.ucd.schema");
 
-        File testUcd = new File(this.getClass().getResource("/ucd/ucd.test.flat.xml").toURI());
+        Resource testUcd = new ClassPathResource("/ucd/ucd.test.flat.xml");
 
         UnicodeCharacterDatabaseFinder finder = new UnicodeCharacterDatabaseFinder(m, testUcd);
-        finder.init();
+        try {
+            finder.init();
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         this.codepointQueryHandler = new CodepointQueryHandler(finder);
     }

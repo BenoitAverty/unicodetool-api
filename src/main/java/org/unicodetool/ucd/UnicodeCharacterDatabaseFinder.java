@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.core.io.Resource;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import javax.annotation.PostConstruct;
 import javax.xml.bind.JAXBElement;
 import javax.xml.transform.stream.StreamSource;
 import java.io.File;
+import java.io.IOException;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -24,22 +26,25 @@ import java.util.function.Predicate;
 public class UnicodeCharacterDatabaseFinder {
 
     private final Jaxb2Marshaller marshaller;
-    private final File unicodeCharacterDatabaseXml;
+    private final Resource unicodeCharacterDatabaseXml;
     private UcdContent ucd;
 
     @Autowired
     public UnicodeCharacterDatabaseFinder(
             Jaxb2Marshaller marshaller,
-            @Value("classpath:ucd/ucd.all.flat.xml") File ucdFile
+            @Value("classpath:ucd/ucd.all.flat.xml") Resource ucdFile
     ) {
         this.marshaller = marshaller;
         this.unicodeCharacterDatabaseXml = ucdFile;
     }
 
     @PostConstruct
-    public void init() {
-        ucd =(UcdContent) ((JAXBElement) marshaller.unmarshal(new StreamSource(unicodeCharacterDatabaseXml))).getValue();
-        log.info("Successfully unmarshalled Unicode Character Database");
+    public void init() throws IOException {
+        log.info("Starting unmarshalling the Unicode Character Database");
+        ucd =(UcdContent) ((JAXBElement) marshaller.unmarshal(
+                new StreamSource(unicodeCharacterDatabaseXml.getInputStream())
+        )).getValue();
+        log.info("Successfully unmarshalled the Unicode Character Database");
     }
 
     /**

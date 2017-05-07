@@ -56,6 +56,14 @@ dependencies {
 	testRuntime('org.junit.jupiter:junit-jupiter-engine:5.0.0-M4')
 }
 
+// Make the jar fully executable
+bootJar {
+	launchScript {
+		included = true
+	}
+}
+
+// Configure the JAXB classes og the unicode character database xml schema
 jaxb {
     javaGen {
         posConfig {
