@@ -1,2 +1,4 @@
+ucd.location: http://www.unicode.org/Public/9.0.0/ucdxml/ucd.all.flat.zip
+
 management:
   context-path: /manage

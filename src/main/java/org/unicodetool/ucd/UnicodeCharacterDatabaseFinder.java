@@ -4,11 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.core.io.Resource;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.unicodetool.ucd.schema.CodePoint;
 import org.unicodetool.ucd.schema.Repertoire;
 import org.unicodetool.ucd.schema.UcdContent;
@@ -16,33 +13,42 @@ import org.unicodetool.ucd.schema.UcdContent;
 import javax.annotation.PostConstruct;
 import javax.xml.bind.JAXBElement;
 import javax.xml.transform.stream.StreamSource;
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 @Service
 @Slf4j
 public class UnicodeCharacterDatabaseFinder {
 
     private final Jaxb2Marshaller marshaller;
-    private final Resource unicodeCharacterDatabaseXml;
+    private final InputStream ucdStream;
     private UcdContent ucd;
 
+    /**
+     * Construct the Unicode Character Database Finder.
+     *
+     * @param marshaller the JAXB Marshaller that will be used to decode the xml stream
+     * @param ucdStream An InputStream which contains the XML data of the unicode character database
+     */
     @Autowired
     public UnicodeCharacterDatabaseFinder(
             Jaxb2Marshaller marshaller,
-            @Value("classpath:ucd/ucd.all.flat.xml") Resource ucdFile
+            InputStream ucdStream
     ) {
         this.marshaller = marshaller;
-        this.unicodeCharacterDatabaseXml = ucdFile;
+        this.ucdStream = ucdStream;
     }
 
     @PostConstruct
     public void init() throws IOException {
         log.info("Starting unmarshalling the Unicode Character Database");
         ucd =(UcdContent) ((JAXBElement) marshaller.unmarshal(
-                new StreamSource(unicodeCharacterDatabaseXml.getInputStream())
+                new StreamSource(ucdStream)
         )).getValue();
         log.info("Successfully unmarshalled the Unicode Character Database");
     }

@@ -37,13 +37,13 @@ public class CodepointQueryHandlerTest {
     private CodepointQueryHandler codepointQueryHandler;
 
     @BeforeEach
-    public void setUp() throws URISyntaxException {
+    public void setUp() throws URISyntaxException, IOException {
         Jaxb2Marshaller m = new Jaxb2Marshaller();
         m.setPackagesToScan("org.unicodetool.ucd.schema");
 
         Resource testUcd = new ClassPathResource("/ucd/ucd.test.flat.xml");
 
-        UnicodeCharacterDatabaseFinder finder = new UnicodeCharacterDatabaseFinder(m, testUcd);
+        UnicodeCharacterDatabaseFinder finder = new UnicodeCharacterDatabaseFinder(m, testUcd.getInputStream());
         try {
             finder.init();
         }
