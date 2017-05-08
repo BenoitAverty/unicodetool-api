@@ -44,12 +44,7 @@ public class CodepointQueryHandlerTest {
         Resource testUcd = new ClassPathResource("/ucd/ucd.test.flat.xml");
 
         UnicodeCharacterDatabaseFinder finder = new UnicodeCharacterDatabaseFinder(m, testUcd.getInputStream());
-        try {
-            finder.init();
-        }
-        catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        finder.init();
 
         this.codepointQueryHandler = new CodepointQueryHandler(finder);
     }

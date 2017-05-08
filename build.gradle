@@ -23,6 +23,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'org.junit.platform.gradle.plugin'
 
+group = 'org.unicodetool'
 version = '1.0.0'
 sourceCompatibility = 1.8
 
