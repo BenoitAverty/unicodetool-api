@@ -45,7 +45,7 @@ public class CodepointValue {
                 if (input instanceof Integer) {
                     return CodepointValue.of((Integer) input);
                 } else if (input instanceof String) {
-                    return CodepointValue.of((Integer) input);
+                    return CodepointValue.of((String) input);
                 } else {
                     return null;
                 }
