@@ -1,6 +1,7 @@
 package org.unicodetool.graphql.schema;
 
 import com.coxautodev.graphql.tools.GraphQLRootResolver;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.unicodetool.application.CodepointQueryHandler;
@@ -21,8 +22,9 @@ public class Query implements GraphQLRootResolver {
         this.codepointQueryHandler = cqh;
     }
 
-    public Codepoint codepoint(int value) {
-        return codepointQueryHandler.findCodepoint(value).orElseThrow(CodepointNotFound::new);
+    public Codepoint codepoint(CodepointValue codepointValue) {
+
+        return codepointQueryHandler.findCodepoint(codepointValue.getValue()).orElseThrow(CodepointNotFound::new);
     }
 
     public List<Codepoint> codepoints() {

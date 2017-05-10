@@ -25,13 +25,15 @@ public class CodepointQueryHandler {
     }
 
     /**
+     * //TODO Remove this method. Only the find by string will be used
+     *
      * Find a codepoint by its integer value.
      *
      * @param value The integer value of the codepoint.
      * @return The codepoint represented by a graphql object.
      * @throws ValueOutsideRangeException if the value is negative or greater than the maximum codepoint.
      */
-    public Optional<Codepoint> findCodepoint(int value) {
+    private Optional<Codepoint> findCodepoint(int value) {
 
         if(value > 0x10FFFF || value < 0) {
             throw new ValueOutsideRangeException("The value of a codepoint must be between 0 and 0x10FFFF (1114111) inclusive");

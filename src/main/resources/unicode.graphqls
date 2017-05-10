@@ -1,6 +1,6 @@
 type Query {
     codepoints: [Codepoint!]
-    codepoint(value: Int!): Codepoint
+    codepoint(value: CodepointValue!): Codepoint
 }
 
 type Codepoint {

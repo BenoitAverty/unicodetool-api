@@ -49,40 +49,6 @@ public class CodepointQueryHandlerTest {
         this.codepointQueryHandler = new CodepointQueryHandler(finder);
     }
 
-    @Nested
-    @DisplayName("Finding Codepoint By Value")
-    class findByValue {
-        @Test
-        @DisplayName("Existing Codepoint")
-        public void findExistingCodepoint() {
-            final String expectedName = "LATIN CAPITAL LETTER A";
-            final String expectedBlock = "ASCII";
-
-            final Optional<Codepoint> actual = codepointQueryHandler.findCodepoint(65);
-
-            assertTrue(actual.isPresent(), "Codepoint was not found");
-            assertAll("Returned codepoint is not correct",
-                    () -> assertEquals(65, actual.get().getValue(),
-                            "Incorrect value."),
-                    () -> assertEquals(expectedName, actual.get().getName(),
-                            "Incorrect name."),
-                    () -> assertEquals(expectedBlock, actual.get().getProperties().getBlock(),
-                            "Incorrect block.")
-            );
-        }
-
-        @Test
-        @DisplayName("Value outside range")
-        public void findOutsideRange() {
-            assertThrows(ValueOutsideRangeException.class, () -> codepointQueryHandler.findCodepoint(1114112));
-        }
-
-        @Test
-        @DisplayName("Negative value")
-        public void findNegative() {
-            assertThrows(ValueOutsideRangeException.class, () -> codepointQueryHandler.findCodepoint(-1));
-        }
-    }
 
     @Nested
     @DisplayName("Finding Codepoint By String Value")
