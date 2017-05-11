@@ -27,6 +27,7 @@
         <char cp="1752" na="BUHID VOWEL SIGN I" gc="Mn" age="3.2" sc="Buhd"/>
         <char cp="1820" age="3.0" na="MONGOLIAN LETTER A" sc="Mong" gc="Lo" />
 
+        <noncharacter first-cp="FFFFE" last-cp="FFFFF" age="2.0" na="" gc="Cn" NChar="Y" blk="Sup_PUA_A" />
 
     </repertoire>
 </ucd>

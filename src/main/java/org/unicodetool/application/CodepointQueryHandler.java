@@ -42,7 +42,7 @@ public class CodepointQueryHandler {
 
         return unicodeCharacterDatabaseFinder.findCodepoint(value)
                 .map(xmlCodepoint -> new Codepoint(
-                        CodepointValue.of(xmlCodepoint.getCp()),
+                        CodepointValue.of(value),
                         xmlCodepoint.getNa(),
                         new Properties(
                                 xmlCodepoint.getNa(),
@@ -60,9 +60,6 @@ public class CodepointQueryHandler {
      * @throws CodepointFormatException if the given string has an incorrect format.
      */
     public Optional<Codepoint> findCodepoint(String valueStr) {
-
-
-
         try {
             Integer value = Optional.ofNullable(valueStr)
                     .map(s -> s.startsWith("U+") ? s.substring(2) : s)

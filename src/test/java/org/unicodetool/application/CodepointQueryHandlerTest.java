@@ -1,30 +1,19 @@
 package org.unicodetool.application;
 
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.unicodetool.application.CodepointQueryHandler;
 import org.unicodetool.application.exceptions.CodepointFormatException;
 import org.unicodetool.application.exceptions.ValueOutsideRangeException;
 import org.unicodetool.graphql.schema.Codepoint;
 import org.unicodetool.graphql.schema.CodepointValue;
 import org.unicodetool.ucd.UnicodeCharacterDatabaseFinder;
 
-import javax.swing.text.html.Option;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Optional;
@@ -99,6 +88,18 @@ public class CodepointQueryHandlerTest {
             final Optional<Codepoint> actual = codepointQueryHandler.findCodepoint("U+0x0041");
 
             assertTrue(actual.isPresent(), "Codepoint was not found");
+        }
+
+        @Test
+        @DisplayName("Value on the limit of a range codepoint")
+        public void findCodepointAtRangeLimit() {
+            final CodepointValue expectedCodepointValue = CodepointValue.of("FFFFF");
+
+            final Optional<Codepoint> actual = codepointQueryHandler.findCodepoint("FFFFF");
+
+            assertTrue(actual.isPresent(), "Codepoint was not found");
+            assertEquals(expectedCodepointValue, actual.get().getValue(),
+                            "Incorrect value.");
         }
 
         @Test

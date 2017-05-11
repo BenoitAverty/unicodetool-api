@@ -20,8 +20,9 @@ public class Query implements GraphQLRootResolver {
     }
 
     public Codepoint codepoint(CodepointValue codepointValue) {
-
-        return codepointQueryHandler.findCodepoint(codepointValue.getValue()).orElseThrow(CodepointNotFound::new);
+        return codepointQueryHandler
+                .findCodepoint(codepointValue.getValue())
+                .orElseThrow(CodepointNotFound::new);
     }
 
     public List<Codepoint> codepoints() {

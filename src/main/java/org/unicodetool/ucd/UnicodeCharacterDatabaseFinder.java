@@ -70,8 +70,8 @@ public class UnicodeCharacterDatabaseFinder {
                 codepoint -> (codepoint.getCp() != null)
                         ? strValue.equals(codepoint.getCp())
                         : (
-                                strValue.compareTo(codepoint.getFirstCp())>0 &&
-                                strValue.compareTo(codepoint.getLastCp())<0
+                                strValue.compareTo(codepoint.getFirstCp())>=0 &&
+                                strValue.compareTo(codepoint.getLastCp())<=0
                         )
                 ;
 
