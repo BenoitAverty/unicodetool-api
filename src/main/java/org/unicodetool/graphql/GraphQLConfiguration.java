@@ -41,8 +41,8 @@ public class GraphQLConfiguration {
     }
 
     @Bean
-    public ServletRegistrationBean graphqlServletRegistrationBean(GraphQLSchema graphQLSchema, ExecutionStrategy executionStrategy) {
-        return new ServletRegistrationBean(
+    public ServletRegistrationBean<SimpleGraphQLServlet> graphqlServletRegistrationBean(GraphQLSchema graphQLSchema, ExecutionStrategy executionStrategy) {
+        return new ServletRegistrationBean<>(
                 new SimpleGraphQLServlet(graphQLSchema, executionStrategy),
                 "/graphql");
     }
