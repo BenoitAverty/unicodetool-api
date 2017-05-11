@@ -5,6 +5,7 @@ import graphql.language.StringValue;
 import graphql.schema.Coercing;
 import graphql.schema.GraphQLScalarType;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 /**
@@ -19,6 +20,7 @@ import lombok.Getter;
  * </li>
  */
 @AllArgsConstructor
+@EqualsAndHashCode
 public class CodepointValue {
 
     @Getter
@@ -32,6 +34,15 @@ public class CodepointValue {
         return new CodepointValue(String.format("%04X", value & 0xFFFFFF));
     }
 
+    public String toString() {
+        return "U+"+value;
+    }
+
+    /**
+     * Returns the GraphQL scalar type corresponding to this class. The scalar type can be build from a string or
+     * integer, and can be parsed from a IntValue or StringValue AST node.
+     * @see GraphQLScalarType
+     */
     public static GraphQLScalarType scalar() {
         final String description = "Numeric value of a codepoint. can be used to express a codepoint in various forms:\n"+
                 " - Decimal integer (e.g. 65)\n"+
@@ -41,7 +52,15 @@ public class CodepointValue {
 
         return new GraphQLScalarType("CodepointValue", description, new Coercing() {
             @Override
-            public CodepointValue serialize(Object input) {
+            public String serialize(Object input) {
+                if(input instanceof CodepointValue) {
+                    return input.toString();
+                }
+                return null;
+            }
+
+            @Override
+            public Object parseValue(Object input) {
                 if (input instanceof Integer) {
                     return CodepointValue.of((Integer) input);
                 } else if (input instanceof String) {
@@ -49,11 +68,6 @@ public class CodepointValue {
                 } else {
                     return null;
                 }
-            }
-
-            @Override
-            public Object parseValue(Object input) {
-                return serialize(input);
             }
 
             @Override

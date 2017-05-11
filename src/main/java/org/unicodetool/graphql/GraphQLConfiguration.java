@@ -17,9 +17,6 @@ import org.unicodetool.graphql.schema.Properties;
 
 import java.util.List;
 
-/**
- * Created by benoit on 5/1/17.
- */
 @Configuration
 public class GraphQLConfiguration {
 

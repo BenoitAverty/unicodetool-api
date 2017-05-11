@@ -4,7 +4,7 @@ type Query {
 }
 
 type Codepoint {
-    value: Int!
+    value: CodepointValue!
     name: String!
     properties: Properties!
 }

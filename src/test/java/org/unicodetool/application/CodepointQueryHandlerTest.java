@@ -17,6 +17,7 @@ import org.unicodetool.application.CodepointQueryHandler;
 import org.unicodetool.application.exceptions.CodepointFormatException;
 import org.unicodetool.application.exceptions.ValueOutsideRangeException;
 import org.unicodetool.graphql.schema.Codepoint;
+import org.unicodetool.graphql.schema.CodepointValue;
 import org.unicodetool.ucd.UnicodeCharacterDatabaseFinder;
 
 import javax.swing.text.html.Option;
@@ -58,12 +59,13 @@ public class CodepointQueryHandlerTest {
         public void findExistingCodepoint() {
             final String expectedName = "LATIN CAPITAL LETTER A";
             final String expectedBlock = "ASCII";
+            final CodepointValue expectedCodepointValue = CodepointValue.of("0041");
 
             final Optional<Codepoint> actual = codepointQueryHandler.findCodepoint("0041");
 
             assertTrue(actual.isPresent(), "Codepoint was not found");
             assertAll("Returned codepoint is not correct",
-                    () -> assertEquals(65, actual.get().getValue(),
+                    () -> assertEquals(expectedCodepointValue, actual.get().getValue(),
                             "Incorrect value."),
                     () -> assertEquals(expectedName, actual.get().getName(),
                             "Incorrect name."),

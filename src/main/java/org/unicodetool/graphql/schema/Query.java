@@ -1,13 +1,10 @@
 package org.unicodetool.graphql.schema;
 
 import com.coxautodev.graphql.tools.GraphQLRootResolver;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.unicodetool.application.CodepointQueryHandler;
 import org.unicodetool.graphql.exceptions.CodepointNotFound;
-import org.unicodetool.ucd.UnicodeCharacterDatabaseFinder;
-import org.unicodetool.ucd.schema.CodePoint;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,7 +26,7 @@ public class Query implements GraphQLRootResolver {
 
     public List<Codepoint> codepoints() {
         Codepoint c1 = new Codepoint(
-                0x41,
+                CodepointValue.of(0x41),
                 "LATIN CAPITAL LETTER A",
                 new Properties(
                         "LATIN CAPITAL LETTER A",
@@ -37,7 +34,7 @@ public class Query implements GraphQLRootResolver {
                 )
         );
         Codepoint c2 = new Codepoint(
-                0x42,
+                CodepointValue.of(0x42),
                 "LATIN CAPITAL LETTER B",
                 new Properties(
                         "LATIN CAPITAL LETTER B",
@@ -45,7 +42,7 @@ public class Query implements GraphQLRootResolver {
                 )
         );
         Codepoint c3 = new Codepoint(
-                0x43,
+                CodepointValue.of(0x43),
                 "LATIN CAPITAL LETTER C",
                 new Properties(
                         "LATIN CAPITAL LETTER C",

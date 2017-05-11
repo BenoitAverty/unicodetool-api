@@ -23,7 +23,7 @@ public class CodepointValueCoercionTest {
 
     @Nested
     @DisplayName("Parsing from the graphql AST")
-    public class parseLiteralTest {
+    public class ParseLiteralTest {
         @DisplayName("With IntValue")
         @Test
         public void testIntInput() {
@@ -57,16 +57,30 @@ public class CodepointValueCoercionTest {
         }
     }
 
+    @DisplayName("Serializing a CodepointValue")
+    @Test
+    public void serializeTest() {
+
+        final CodepointValue input = CodepointValue.of("0041");
+        final String expected = "U+0041";
+
+        final String actual = (String)codepointValueScalarType.getCoercing().serialize(input);
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+
+
     @Nested
     @DisplayName("Converting from variable/data")
-    public class serializeTest {
+    public class ParseValueTest {
         @DisplayName("With Integer input")
         @Test
         public void testIntInput() {
             final Integer input = 65;
             final String expected = "0041";
 
-            final CodepointValue actual = (CodepointValue) codepointValueScalarType.getCoercing().serialize(input);
+            final CodepointValue actual = (CodepointValue) codepointValueScalarType.getCoercing().parseValue(input);
 
             Assertions.assertEquals(expected, actual.getValue());
         }
@@ -77,7 +91,7 @@ public class CodepointValueCoercionTest {
             final String input = "A string";
             final String expected = "A string";
 
-            final CodepointValue actual = (CodepointValue) codepointValueScalarType.getCoercing().serialize(input);
+            final CodepointValue actual = (CodepointValue) codepointValueScalarType.getCoercing().parseValue(input);
 
             Assertions.assertEquals(expected, actual.getValue());
         }
@@ -87,7 +101,7 @@ public class CodepointValueCoercionTest {
         public void testInvalidInput() {
             final Object input = new Object();
 
-            final CodepointValue actual = (CodepointValue) codepointValueScalarType.getCoercing().serialize(input);
+            final CodepointValue actual = (CodepointValue) codepointValueScalarType.getCoercing().parseValue(input);
 
             Assertions.assertNull(actual);
         }
