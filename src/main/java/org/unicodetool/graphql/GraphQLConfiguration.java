@@ -2,6 +2,7 @@ package org.unicodetool.graphql;
 
 import com.coxautodev.graphql.tools.GraphQLResolver;
 import com.coxautodev.graphql.tools.SchemaParser;
+import com.oembedler.moon.graphql.boot.SchemaParserDictionary;
 import graphql.Scalars;
 import graphql.execution.ExecutionStrategy;
 import graphql.execution.SimpleExecutionStrategy;
@@ -21,6 +22,16 @@ import java.util.List;
 public class GraphQLConfiguration {
 
     @Bean
+    public GraphQLScalarType codepointValueGraphQLScalar() {
+        return CodepointValue.scalar();
+    }
+
+    @Bean
+    SchemaParserDictionary schemaParserDictionary() {
+        return new SchemaParserDictionary().dictionary(Codepoint.class, Properties.class);
+    }
+
+    /*@Bean
     ExecutionStrategy executionStrategy() {
         return new SimpleExecutionStrategy();
     }
@@ -42,5 +53,5 @@ public class GraphQLConfiguration {
         return new ServletRegistrationBean<>(
                 new SimpleGraphQLServlet(graphQLSchema, executionStrategy),
                 "/graphql");
-    }
+    }*/
 }
