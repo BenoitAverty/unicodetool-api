@@ -44,6 +44,11 @@ public class UnicodeCharacterDatabaseFinder {
         this.ucdStream = ucdStream;
     }
 
+    /**
+     * Initialize the Unicode Character Database Finder.
+     *
+     * The initialization consist in the unmarshalling of the ucd into memory.
+     */
     @PostConstruct
     public void init() throws IOException {
         log.info("Starting unmarshalling the Unicode Character Database");
@@ -56,22 +61,21 @@ public class UnicodeCharacterDatabaseFinder {
     /**
      * Return a ucd Codepoint based on its value.
      *
-     * @param value the integer value of the codepoint
+     * @param formattedValue the integer value of the codepoint
      * @return The codepoint as a UCD XML Object.
      */
     @Cacheable("codepoint")
-    public Optional<CodePoint> findCodepoint(int value) {
-        final String strValue = String.format("%04X", value & 0xFFFFFF);
-        log.debug(String.format("Cache miss for codepoint %s (%d)", strValue, value));
+    public Optional<CodePoint> findCodepoint(String formattedValue) {
+        log.debug(String.format("Cache miss for codepoint %s", formattedValue));
 
         // Return true if the strValue above is equal to the given codepoint value,
         // or in the given codepoint range
         Predicate<CodePoint> codepointMatches =
                 codepoint -> (codepoint.getCp() != null)
-                        ? strValue.equals(codepoint.getCp())
+                        ? formattedValue.equals(codepoint.getCp())
                         : (
-                                strValue.compareTo(codepoint.getFirstCp())>=0 &&
-                                strValue.compareTo(codepoint.getLastCp())<=0
+                                formattedValue.compareTo(codepoint.getFirstCp())>=0 &&
+                                formattedValue.compareTo(codepoint.getLastCp())<=0
                         )
                 ;
 

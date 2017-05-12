@@ -4,7 +4,7 @@ import com.coxautodev.graphql.tools.GraphQLRootResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.unicodetool.application.CodepointQueryHandler;
-import org.unicodetool.graphql.exceptions.CodepointNotFound;
+import org.unicodetool.application.exceptions.CodepointNotFound;
 
 import java.util.Arrays;
 import java.util.List;
@@ -21,7 +21,7 @@ public class Query implements GraphQLRootResolver {
 
     public Codepoint codepoint(CodepointValue codepointValue) {
         return codepointQueryHandler
-                .findCodepoint(codepointValue.getValue())
+                .findCodepoint(codepointValue)
                 .orElseThrow(CodepointNotFound::new);
     }
 

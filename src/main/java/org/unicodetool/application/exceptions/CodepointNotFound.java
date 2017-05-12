@@ -1,4 +1,4 @@
-package org.unicodetool.graphql.exceptions;
+package org.unicodetool.application.exceptions;
 
 /**
  * Exception thrown when the consumer tries to find a codepoint that doesn't exist

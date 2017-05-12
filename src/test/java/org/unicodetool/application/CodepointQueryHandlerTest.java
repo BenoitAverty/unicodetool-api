@@ -50,7 +50,7 @@ public class CodepointQueryHandlerTest {
             final String expectedBlock = "ASCII";
             final CodepointValue expectedCodepointValue = CodepointValue.of("0041");
 
-            final Optional<Codepoint> actual = codepointQueryHandler.findCodepoint("0041");
+            final Optional<Codepoint> actual = codepointQueryHandler.findCodepoint(CodepointValue.of("0041"));
 
             assertTrue(actual.isPresent(), "Codepoint was not found");
             assertAll("Returned codepoint is not correct",
@@ -67,7 +67,7 @@ public class CodepointQueryHandlerTest {
         @DisplayName("Parameter with \"U+\" prefix")
         public void findCodepointWithPrefix1() {
 
-            final Optional<Codepoint> actual = codepointQueryHandler.findCodepoint("U+0041");
+            final Optional<Codepoint> actual = codepointQueryHandler.findCodepoint(CodepointValue.of("U+0041"));
 
             assertTrue(actual.isPresent(), "Codepoint was not found");
         }
@@ -76,7 +76,7 @@ public class CodepointQueryHandlerTest {
         @DisplayName("Parameter with \"0x\" prefix")
         public void findCodepointWithPrefix2() {
 
-            final Optional<Codepoint> actual = codepointQueryHandler.findCodepoint("0x0041");
+            final Optional<Codepoint> actual = codepointQueryHandler.findCodepoint(CodepointValue.of("0x0041"));
 
             assertTrue(actual.isPresent(), "Codepoint was not found");
         }
@@ -85,7 +85,7 @@ public class CodepointQueryHandlerTest {
         @DisplayName("Parameter with \"0x\" and \"U+\" prefix")
         public void findCodepointWithPrefix3() {
 
-            final Optional<Codepoint> actual = codepointQueryHandler.findCodepoint("U+0x0041");
+            final Optional<Codepoint> actual = codepointQueryHandler.findCodepoint(CodepointValue.of("U+0x0041"));
 
             assertTrue(actual.isPresent(), "Codepoint was not found");
         }
@@ -95,7 +95,7 @@ public class CodepointQueryHandlerTest {
         public void findCodepointAtRangeLimit() {
             final CodepointValue expectedCodepointValue = CodepointValue.of("FFFFF");
 
-            final Optional<Codepoint> actual = codepointQueryHandler.findCodepoint("FFFFF");
+            final Optional<Codepoint> actual = codepointQueryHandler.findCodepoint(CodepointValue.of("FFFFF"));
 
             assertTrue(actual.isPresent(), "Codepoint was not found");
             assertEquals(expectedCodepointValue, actual.get().getValue(),
@@ -105,7 +105,10 @@ public class CodepointQueryHandlerTest {
         @Test
         @DisplayName("Value outside range")
         public void findOutsideRange() {
-            assertThrows(ValueOutsideRangeException.class, () -> codepointQueryHandler.findCodepoint("110000"));
+            assertThrows(
+                    ValueOutsideRangeException.class,
+                    () -> codepointQueryHandler.findCodepoint(CodepointValue.of("110000"))
+            );
         }
 
         @ParameterizedTest
@@ -114,7 +117,7 @@ public class CodepointQueryHandlerTest {
         public void findWithIncorrectFormat(String strValue) {
             assertThrows(
                     CodepointFormatException.class,
-                    () -> codepointQueryHandler.findCodepoint(strValue)
+                    () -> codepointQueryHandler.findCodepoint(CodepointValue.of(strValue))
             );
         }
     }

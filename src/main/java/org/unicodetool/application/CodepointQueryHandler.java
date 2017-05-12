@@ -9,7 +9,6 @@ import org.unicodetool.graphql.schema.CodepointValue;
 import org.unicodetool.graphql.schema.Properties;
 import org.unicodetool.ucd.UnicodeCharacterDatabaseFinder;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 /**
@@ -26,50 +25,38 @@ public class CodepointQueryHandler {
     }
 
     /**
-     * //TODO Remove this method. Only the find by string will be used
+     * Find a codepoint by its string value.
      *
-     * Find a codepoint by its integer value.
-     *
-     * @param value The integer value of the codepoint.
+     * @param value The value of the codepoint.
      * @return The codepoint represented by a graphql object.
      * @throws ValueOutsideRangeException if the value is negative or greater than the maximum codepoint.
+     * @throws CodepointFormatException if the given string has an incorrect format.
      */
-    private Optional<Codepoint> findCodepoint(int value) {
+    public Optional<Codepoint> findCodepoint(CodepointValue value) {
+        String formattedValue = Optional.ofNullable(value)
+                .map(cv -> cv.getValue())
+                .map(s -> s.startsWith("U+") ? s.substring(2) : s)
+                .map(s -> s.startsWith("0x") ? s.substring(2) : s)
+                .orElseThrow(() -> new CodepointFormatException(value.getValue()));
 
-        if(value > 0x10FFFF || value < 0) {
-            throw new ValueOutsideRangeException("The value of a codepoint must be between 0 and 0x10FFFF (1114111) inclusive");
+        try {
+            Integer decimalValue = Integer.valueOf(formattedValue, 16);
+            if(decimalValue < 0 || decimalValue > 0x10FFFF) {
+                throw new ValueOutsideRangeException("The value " + formattedValue + " is outside the unicode range");
+            }
+        }
+        catch (NumberFormatException e) {
+            throw new CodepointFormatException(value.getValue(), e);
         }
 
-        return unicodeCharacterDatabaseFinder.findCodepoint(value)
+        return unicodeCharacterDatabaseFinder.findCodepoint(formattedValue)
                 .map(xmlCodepoint -> new Codepoint(
-                        CodepointValue.of(value),
+                        CodepointValue.of(formattedValue),
                         xmlCodepoint.getNa(),
                         new Properties(
                                 xmlCodepoint.getNa(),
                                 xmlCodepoint.getBlk()
                         )
                 ));
-    }
-
-    /**
-     * Find a codepoint by its string value.
-     *
-     * @param valueStr The string value of the codepoint.
-     * @return The codepoint represented by a graphql object.
-     * @throws ValueOutsideRangeException if the value is negative or greater than the maximum codepoint.
-     * @throws CodepointFormatException if the given string has an incorrect format.
-     */
-    public Optional<Codepoint> findCodepoint(String valueStr) {
-        try {
-            Integer value = Optional.ofNullable(valueStr)
-                    .map(s -> s.startsWith("U+") ? s.substring(2) : s)
-                    .map(s -> s.startsWith("0x") ? s.substring(2) : s)
-                    .map(s -> Integer.valueOf(s, 16))
-                    .orElseThrow(() -> new CodepointFormatException(valueStr));
-            return this.findCodepoint(value);
-        }
-        catch (NumberFormatException e) {
-            throw new CodepointFormatException(valueStr, e);
-        }
     }
 }
