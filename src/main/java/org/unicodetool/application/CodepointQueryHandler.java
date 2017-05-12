@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.unicodetool.application.exceptions.CodepointFormatException;
 import org.unicodetool.application.exceptions.ValueOutsideRangeException;
+import org.unicodetool.graphql.schema.Character;
 import org.unicodetool.graphql.schema.Codepoint;
 import org.unicodetool.graphql.schema.CodepointValue;
 import org.unicodetool.graphql.schema.Properties;
@@ -50,7 +51,7 @@ public class CodepointQueryHandler {
         }
 
         return unicodeCharacterDatabaseFinder.findCodepoint(formattedValue)
-                .map(xmlCodepoint -> new Codepoint(
+                .map(xmlCodepoint -> new Character(
                         CodepointValue.of(formattedValue),
                         xmlCodepoint.getNa(),
                         new Properties(

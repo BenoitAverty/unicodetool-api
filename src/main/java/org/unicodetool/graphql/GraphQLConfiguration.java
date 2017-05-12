@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.unicodetool.graphql.schema.Codepoint;
 import org.unicodetool.graphql.schema.CodepointValue;
 import org.unicodetool.graphql.schema.Properties;
+import org.unicodetool.graphql.schema.Character;
 
 @Configuration
 public class GraphQLConfiguration {
@@ -29,6 +30,10 @@ public class GraphQLConfiguration {
      */
     @Bean
     SchemaParserDictionary schemaParserDictionary() {
-        return new SchemaParserDictionary().dictionary(Codepoint.class, Properties.class);
+        return new SchemaParserDictionary().dictionary(
+                Codepoint.class,
+                Character.class,
+                Properties.class
+        );
     }
 }

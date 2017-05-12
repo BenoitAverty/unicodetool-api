@@ -1,0 +1,14 @@
+package org.unicodetool.graphql.schema;
+
+/**
+ * Codepoint that encodes an assigned character
+ */
+public class Character extends AbstractCodepoint {
+    public Character(CodepointValue value, String name, Properties props) {
+        super(value, name, props);
+    }
+
+    public String character() {
+        return "a";
+    }
+}

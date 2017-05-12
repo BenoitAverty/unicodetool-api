@@ -1,13 +1,16 @@
 package org.unicodetool.application;
 
+import lombok.NoArgsConstructor;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ContainerExtensionContext;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.*;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.unicodetool.application.exceptions.CodepointFormatException;
 import org.unicodetool.application.exceptions.ValueOutsideRangeException;
+import org.unicodetool.graphql.schema.Character;
 import org.unicodetool.graphql.schema.Codepoint;
 import org.unicodetool.graphql.schema.CodepointValue;
 import org.unicodetool.ucd.UnicodeCharacterDatabaseFinder;
@@ -17,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * Tests for the {@link CodepointQueryHandler} use cases.
@@ -120,5 +124,35 @@ public class CodepointQueryHandlerTest {
                     () -> codepointQueryHandler.findCodepoint(CodepointValue.of(strValue))
             );
         }
+    }
+
+    @Nested
+    @DisplayName("Finding different character types")
+    class CharacterTypes {
+        @ParameterizedTest
+        @DisplayName("Finding a Codepoint with correct type")
+        @ArgumentsSource(CodepointTypesArgsSource.class)
+        public void testFindCharacter(CodepointValue inputCodepoint, Class expectedType) {
+            final Class actualType = codepointQueryHandler.findCodepoint(inputCodepoint).get().getClass();
+
+            assertTrue(expectedType.isAssignableFrom(actualType),
+                    "Returned codepoint should be a "+expectedType+" but it is a "+actualType);
+        }
+
+
+    }
+}
+
+/**
+ * Provides arguments for the {@link CodepointQueryHandlerTest.CharacterTypes#testFindCharacter(CodepointValue, Class)} test
+ */
+//TODO: See if there is a way to simplify with @MethodSource...
+class CodepointTypesArgsSource implements ArgumentsProvider {
+    public CodepointTypesArgsSource() {}
+    @Override
+    public Stream<? extends Arguments> arguments(ContainerExtensionContext context) throws Exception {
+        return Stream.of(
+                ObjectArrayArguments.create(CodepointValue.of("0041"), Character.class)
+        );
     }
 }

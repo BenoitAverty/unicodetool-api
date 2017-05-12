@@ -1,18 +1,9 @@
 package org.unicodetool.graphql.schema;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+public interface Codepoint {
+    CodepointValue getValue();
+    Integer getDecimalValue();
+    String getName();
 
-@Getter
-@AllArgsConstructor
-public class Codepoint {
-    private CodepointValue value;
-    private String name;
-
-    public Integer decimalValue() {
-        return value.inDecimalFormat();
-    }
-
-    private Properties properties;
+    Properties getProperties();
 }
