@@ -1,15 +1,16 @@
 type Query {
-    codepoints: [Codepoint!]
+    codepoints: [Codepoint]
     codepoint(value: CodepointValue!): Codepoint
 }
 
 type Codepoint {
-    value: CodepointValue!
-    name: String!
-    properties: Properties!
+    value: CodepointValue
+    decimalValue: Int
+    name: String
+    properties: Properties
 }
 
 type Properties {
-    name: String!
-    block: String!
+    name: String
+    block: String
 }

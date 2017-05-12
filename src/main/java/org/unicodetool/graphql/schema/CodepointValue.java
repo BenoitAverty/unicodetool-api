@@ -34,8 +34,19 @@ public class CodepointValue {
         return new CodepointValue(String.format("%04X", value & 0xFFFFFF));
     }
 
-    public String toString() {
+    /**
+     * @return the codepoint value in the stanbdard unicode format. "U+" prefix followed
+     * by a 4 to 6 digits hexadecimal number (e.g. U+0041 or U+1FFCD)
+     */
+    public String inUnicodeFormat() {
         return "U+"+value;
+    }
+
+    /**
+     * @return the codepoint value as a decimal integer.
+     */
+    public Integer inDecimalFormat() {
+        return Integer.parseInt(value, 16);
     }
 
     /**
@@ -54,7 +65,7 @@ public class CodepointValue {
             @Override
             public String serialize(Object input) {
                 if(input instanceof CodepointValue) {
-                    return input.toString();
+                    return ((CodepointValue) input).inUnicodeFormat();
                 }
                 return null;
             }

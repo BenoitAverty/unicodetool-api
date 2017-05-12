@@ -10,5 +10,9 @@ public class Codepoint {
     private CodepointValue value;
     private String name;
 
+    public Integer decimalValue() {
+        return value.inDecimalFormat();
+    }
+
     private Properties properties;
 }
