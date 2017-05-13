@@ -9,6 +9,6 @@ public class Character extends Codepoint {
     }
 
     public String character() {
-        return "a";
+        return new String(new int[] { this.getDecimalValue() }, 0, 1);
     }
 }
