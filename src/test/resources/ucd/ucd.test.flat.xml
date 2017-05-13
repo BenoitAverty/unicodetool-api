@@ -29,5 +29,7 @@
 
         <noncharacter first-cp="FFFFE" last-cp="FFFFF" age="2.0" na="" gc="Cn" NChar="Y" blk="Sup_PUA_A" />
 
+        <surrogate first-cp="D800" last-cp="DB7F" age="2.0" na="" JSN="" gc="Cs" blk="High_Surrogates" />
+        <reserved first-cp="0378" last-cp="0379" age="unassigned" na="" JSN="" gc="Cn" ccc="0" dt="none" dm="#" nt="None" nv="NaN" bc="L" blk="Greek" />
     </repertoire>
 </ucd>

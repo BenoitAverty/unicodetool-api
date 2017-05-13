@@ -18,6 +18,27 @@ type Character implements Codepoint {
     character: String
 }
 
+type Surrogate implements Codepoint {
+    value: CodepointValue
+    decimalValue: Int
+    name: String
+    properties: Properties
+}
+
+type Reserved implements Codepoint {
+    value: CodepointValue
+    decimalValue: Int
+    name: String
+    properties: Properties
+}
+
+type NonCharacter implements Codepoint {
+    value: CodepointValue
+    decimalValue: Int
+    name: String
+    properties: Properties
+}
+
 type Properties {
     name: String
     block: String

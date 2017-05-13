@@ -10,9 +10,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.unicodetool.application.exceptions.CodepointFormatException;
 import org.unicodetool.application.exceptions.ValueOutsideRangeException;
+import org.unicodetool.graphql.schema.*;
 import org.unicodetool.graphql.schema.Character;
-import org.unicodetool.graphql.schema.Codepoint;
-import org.unicodetool.graphql.schema.CodepointValue;
 import org.unicodetool.ucd.UnicodeCharacterDatabaseFinder;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -46,7 +45,7 @@ public class CodepointQueryHandlerTest {
 
     @Nested
     @DisplayName("Finding Codepoint By String Value")
-    class findByStringValue {
+    class ByStringValue {
         @Test
         @DisplayName("Existing Codepoint")
         public void findExistingCodepoint() {
@@ -124,27 +123,21 @@ public class CodepointQueryHandlerTest {
                     () -> codepointQueryHandler.findCodepoint(CodepointValue.of(strValue))
             );
         }
-    }
 
-    @Nested
-    @DisplayName("Finding different character types")
-    class CharacterTypes {
-        @ParameterizedTest
-        @DisplayName("Finding a Codepoint with correct type")
+        @DisplayName("Finding different character types")
+        @ParameterizedTest(name = "Finding a Codepoint of type {1}")
         @ArgumentsSource(CodepointTypesArgsSource.class)
-        public void testFindCharacter(CodepointValue inputCodepoint, Class expectedType) {
+        public void testFindTypes(CodepointValue inputCodepoint, Class expectedType) {
             final Class actualType = codepointQueryHandler.findCodepoint(inputCodepoint).get().getClass();
 
             assertTrue(expectedType.isAssignableFrom(actualType),
                     "Returned codepoint should be a "+expectedType+" but it is a "+actualType);
         }
-
-
     }
 }
 
 /**
- * Provides arguments for the {@link CodepointQueryHandlerTest.CharacterTypes#testFindCharacter(CodepointValue, Class)} test
+ * Provides arguments for the {@link CodepointQueryHandlerTest.ByStringValue#testFindTypes(CodepointValue, Class)} test
  */
 //TODO: See if there is a way to simplify with @MethodSource...
 class CodepointTypesArgsSource implements ArgumentsProvider {
@@ -152,7 +145,10 @@ class CodepointTypesArgsSource implements ArgumentsProvider {
     @Override
     public Stream<? extends Arguments> arguments(ContainerExtensionContext context) throws Exception {
         return Stream.of(
-                ObjectArrayArguments.create(CodepointValue.of("0041"), Character.class)
+                ObjectArrayArguments.create(CodepointValue.of("0041"), Character.class),
+                ObjectArrayArguments.create(CodepointValue.of("FFFFE"), NonCharacter.class),
+                ObjectArrayArguments.create(CodepointValue.of("D801"), Surrogate.class),
+                ObjectArrayArguments.create(CodepointValue.of("0378"), Reserved.class)
         );
     }
 }

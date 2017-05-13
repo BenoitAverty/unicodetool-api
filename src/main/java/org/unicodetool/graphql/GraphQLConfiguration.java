@@ -4,9 +4,7 @@ import com.oembedler.moon.graphql.boot.SchemaParserDictionary;
 import graphql.schema.GraphQLScalarType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.unicodetool.graphql.schema.Codepoint;
-import org.unicodetool.graphql.schema.CodepointValue;
-import org.unicodetool.graphql.schema.Properties;
+import org.unicodetool.graphql.schema.*;
 import org.unicodetool.graphql.schema.Character;
 
 @Configuration
@@ -33,6 +31,9 @@ public class GraphQLConfiguration {
         return new SchemaParserDictionary().dictionary(
                 Codepoint.class,
                 Character.class,
+                NonCharacter.class,
+                Surrogate.class,
+                Reserved.class,
                 Properties.class
         );
     }

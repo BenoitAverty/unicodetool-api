@@ -51,13 +51,6 @@ public class CodepointQueryHandler {
         }
 
         return unicodeCharacterDatabaseFinder.findCodepoint(formattedValue)
-                .map(xmlCodepoint -> new Character(
-                        CodepointValue.of(formattedValue),
-                        xmlCodepoint.getNa(),
-                        new Properties(
-                                xmlCodepoint.getNa(),
-                                xmlCodepoint.getBlk()
-                        )
-                ));
+                .map(CodepointConverter.withFormattedValue(formattedValue));
     }
 }
