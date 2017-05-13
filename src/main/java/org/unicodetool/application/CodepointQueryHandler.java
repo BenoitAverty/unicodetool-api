@@ -6,7 +6,6 @@ import org.unicodetool.application.exceptions.CodepointFormatException;
 import org.unicodetool.application.exceptions.ValueOutsideRangeException;
 import org.unicodetool.graphql.schema.Codepoint;
 import org.unicodetool.graphql.schema.CodepointValue;
-import org.unicodetool.graphql.schema.Properties;
 import org.unicodetool.ucd.UnicodeCharacterDatabaseFinder;
 
 import java.util.Optional;
@@ -50,13 +49,6 @@ public class CodepointQueryHandler {
         }
 
         return unicodeCharacterDatabaseFinder.findCodepoint(formattedValue)
-                .map(xmlCodepoint -> new Codepoint(
-                        CodepointValue.of(formattedValue),
-                        xmlCodepoint.getNa(),
-                        new Properties(
-                                xmlCodepoint.getNa(),
-                                xmlCodepoint.getBlk()
-                        )
-                ));
+                .map(CodepointConverter.withFormattedValue(formattedValue));
     }
 }

@@ -26,7 +26,7 @@ public class Query implements GraphQLRootResolver {
     }
 
     public List<Codepoint> codepoints() {
-        Codepoint c1 = new Codepoint(
+        Codepoint c1 = new Character(
                 CodepointValue.of(0x41),
                 "LATIN CAPITAL LETTER A",
                 new Properties(
@@ -34,7 +34,7 @@ public class Query implements GraphQLRootResolver {
                         "Basic Latin"
                 )
         );
-        Codepoint c2 = new Codepoint(
+        Codepoint c2 = new Character(
                 CodepointValue.of(0x42),
                 "LATIN CAPITAL LETTER B",
                 new Properties(
@@ -42,7 +42,7 @@ public class Query implements GraphQLRootResolver {
                         "Basic Latin"
                 )
         );
-        Codepoint c3 = new Codepoint(
+        Codepoint c3 = new Character(
                 CodepointValue.of(0x43),
                 "LATIN CAPITAL LETTER C",
                 new Properties(

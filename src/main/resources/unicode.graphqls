@@ -3,7 +3,36 @@ type Query {
     codepoint(value: CodepointValue!): Codepoint
 }
 
-type Codepoint {
+interface Codepoint {
+    value: CodepointValue
+    decimalValue: Int
+    name: String
+    properties: Properties
+}
+
+type Character implements Codepoint {
+    value: CodepointValue
+    decimalValue: Int
+    name: String
+    properties: Properties
+    character: String
+}
+
+type Surrogate implements Codepoint {
+    value: CodepointValue
+    decimalValue: Int
+    name: String
+    properties: Properties
+}
+
+type Reserved implements Codepoint {
+    value: CodepointValue
+    decimalValue: Int
+    name: String
+    properties: Properties
+}
+
+type NonCharacter implements Codepoint {
     value: CodepointValue
     decimalValue: Int
     name: String
