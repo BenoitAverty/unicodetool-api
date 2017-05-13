@@ -5,21 +5,17 @@ import lombok.Getter;
 
 import java.util.List;
 
+@AllArgsConstructor
 @Getter
 public class Properties {
-    public Properties(String name, String block) {
-        this.name = name;
-        this.block = block;
-    }
-
     // general properties
     private String name;
-    private List<String> nameAlias;
+    private List<NameAlias> nameAlias;
     private String block;
     private String age;
     private String generalCategory;
     private String script;
-    private String scriptExtensions;
+    private List<String> scriptExtensions;
     private Boolean whiteSpace;
     private Boolean alphabetic;
     private String hangulSyllabeType;
@@ -32,10 +28,10 @@ public class Properties {
     // case properties
     private Boolean uppercase;
     private Boolean lowercase;
-    private String lowercaseMapping;
-    private String titlecaseMapping;
-    private String uppercaseMapping;
-    private String caseFolding;
+    private List<String> lowercaseMapping;
+    private List<String> titlecaseMapping;
+    private List<String> uppercaseMapping;
+    private List<String> caseFolding;
     private String simpleLowercaseMapping;
     private String simpleTitlecaseMapping;
     private String simpleUppercaseMapping;
@@ -56,24 +52,25 @@ public class Properties {
     private Boolean asciiHexDigit;
 
     // normalization properties
-    private String canonicalCombiningClass;
-    private String decompositionMapping;
+    private Integer canonicalCombiningClass;
+    private List<String> decompositionMapping;
     private Boolean compositionExclusion;
     private Boolean fullCompositionExclusion;
     private String decompositionType;
-    private String fcNfkcClosure;
+    private List<String> fcNfkcClosure;
     private String nfcQuickCkeck;
     private String nfkcQuickCheck;
     private String nfdQuickCheck;
     private String nfkdQuickCheck;
     private Boolean expandsOnNfc;
+    private Boolean expandsOnNfkc;
     private Boolean expandsOnNfd;
     private Boolean expandsOnNfkd;
-    private String nfkcCasefold;
+    private List<String> nfkcCasefold;
     private Boolean changesWhenNfkcCaseFolded;
 
     // shaping and rendering properties
-    private String joinControl;
+    private Boolean joinControl;
     private String joiningGroup;
     private String joiningType;
     private String lineBreak;
@@ -85,7 +82,7 @@ public class Properties {
 
     // Bidirectional properties
     private String bidiClass;
-    private String bidiControl;
+    private Boolean bidiControl;
     private Boolean bidiMirrored;
     private String bidiMirroringGlyph;
     private CodepointValue bidiPairedBracket;
@@ -105,7 +102,7 @@ public class Properties {
     private Boolean radical;
     private Boolean idsBinaryOperator;
     private Boolean idsTrinaryOperator;
-    private String unicodeRadicalStroke;
+    private List<String> unicodeRadicalStroke;
 
     // Misc properties
     private Boolean math;

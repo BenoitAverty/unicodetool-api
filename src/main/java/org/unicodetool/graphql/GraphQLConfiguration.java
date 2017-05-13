@@ -34,7 +34,8 @@ public class GraphQLConfiguration {
                 NonCharacter.class,
                 Surrogate.class,
                 Reserved.class,
-                Properties.class
+                Properties.class,
+                NameAlias.class
         );
     }
 }

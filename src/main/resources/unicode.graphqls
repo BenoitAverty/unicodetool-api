@@ -1,5 +1,5 @@
 type Query {
-    codepoints: [Codepoint]
+    #codepoints: [Codepoint]
     codepoint(value: CodepointValue!): Codepoint
 }
 
@@ -42,12 +42,12 @@ type NonCharacter implements Codepoint {
 type Properties {
     # general properties
     name: String
-    nameAlias: [String]
+    nameAlias: [NameAlias]
     block: String
     age: String
     generalCategory: String
     script: String
-    scriptExtensions: String
+    scriptExtensions: [String]
     whiteSpace: Boolean
     alphabetic: Boolean
     hangulSyllabeType: String
@@ -60,10 +60,10 @@ type Properties {
     # case properties
     uppercase: Boolean
     lowercase: Boolean
-    lowercaseMapping: String
-    titlecaseMapping: String
-    uppercaseMapping: String
-    caseFolding: String
+    lowercaseMapping: [String]
+    titlecaseMapping: [String]
+    uppercaseMapping: [String]
+    caseFolding: [String]
     simpleLowercaseMapping: String
     simpleTitlecaseMapping: String
     simpleUppercaseMapping: String
@@ -84,24 +84,25 @@ type Properties {
     asciiHexDigit: Boolean
 
     # normalization properties
-    canonicalCombiningClass: String
-    decompositionMapping: String
+    canonicalCombiningClass: Int
+    decompositionMapping: [String]
     compositionExclusion: Boolean
     fullCompositionExclusion: Boolean
     decompositionType: String
-    fcNfkcClosure: String
+    fcNfkcClosure: [String]
     nfcQuickCkeck: String
     nfkcQuickCheck: String
     nfdQuickCheck: String
     nfkdQuickCheck: String
     expandsOnNfc: Boolean
+    expandsOnNfkc: Boolean
     expandsOnNfd: Boolean
     expandsOnNfkd: Boolean
-    nfkcCasefold: String
+    nfkcCasefold: [String]
     changesWhenNfkcCaseFolded: Boolean
 
     # shaping and rendering properties
-    joinControl: String
+    joinControl: Boolean
     joiningGroup: String
     joiningType: String
     lineBreak: String
@@ -113,7 +114,7 @@ type Properties {
 
     # Bidirectional properties
     bidiClass: String
-    bidiControl: String
+    bidiControl: Boolean
     bidiMirrored: Boolean
     bidiMirroringGlyph: String
     bidiPairedBracket: CodepointValue
@@ -133,7 +134,7 @@ type Properties {
     radical: Boolean
     idsBinaryOperator: Boolean
     idsTrinaryOperator: Boolean
-    unicodeRadicalStroke: String
+    unicodeRadicalStroke: [String]
 
     # Misc properties
     math: Boolean
@@ -162,4 +163,9 @@ type Properties {
     otherMath: Boolean
     otherUppercase: Boolean
     jamoShortName: String
+}
+
+type NameAlias {
+    type: String
+    alias: String
 }
