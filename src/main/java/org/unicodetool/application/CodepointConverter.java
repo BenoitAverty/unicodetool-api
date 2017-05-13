@@ -79,7 +79,7 @@ public class CodepointConverter implements Function<CodePoint, Codepoint> {
                 xmlCodepoint.getBlk(),
                 xmlCodepoint.getAge(),
                 xmlCodepoint.getGc(),
-                xmlCodepoint.getSc().value(),
+                xmlCodepoint.getSc()!=null ? xmlCodepoint.getSc().value() : null,
                 xmlCodepoint.getScx().stream().map(s -> s.value()).collect(Collectors.toList()),
                 xmlCodepoint.getWSpace() == Y,
                 xmlCodepoint.getAlpha() == Y,
