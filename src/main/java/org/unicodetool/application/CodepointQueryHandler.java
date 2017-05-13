@@ -4,10 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.unicodetool.application.exceptions.CodepointFormatException;
 import org.unicodetool.application.exceptions.ValueOutsideRangeException;
-import org.unicodetool.graphql.schema.Character;
 import org.unicodetool.graphql.schema.Codepoint;
 import org.unicodetool.graphql.schema.CodepointValue;
-import org.unicodetool.graphql.schema.Properties;
 import org.unicodetool.ucd.UnicodeCharacterDatabaseFinder;
 
 import java.util.Optional;
