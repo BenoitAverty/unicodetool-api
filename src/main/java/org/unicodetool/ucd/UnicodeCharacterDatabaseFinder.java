@@ -61,7 +61,8 @@ public class UnicodeCharacterDatabaseFinder {
     /**
      * Return a ucd Codepoint based on its value.
      *
-     * @param formattedValue the integer value of the codepoint
+     * @param formattedValue the string value of the codepoint. between 4 and 6 hexadecimal digits (uppercase).
+     *                       e.g. 0041 or 1D12F.
      * @return The codepoint as a UCD XML Object.
      */
     @Cacheable("codepoint")

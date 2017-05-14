@@ -1,5 +1,6 @@
 package org.unicodetool.application;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.unicodetool.application.exceptions.CodepointFormatException;
@@ -36,6 +37,9 @@ public class CodepointQueryHandler {
                 .map(cv -> cv.getValue())
                 .map(s -> s.startsWith("U+") ? s.substring(2) : s)
                 .map(s -> s.startsWith("0x") ? s.substring(2) : s)
+                .filter(StringUtils::isNotBlank)
+                .map(s -> StringUtils.leftPad(s, 4, '0'))
+                .map(s -> s.toUpperCase())
                 .orElseThrow(() -> new CodepointFormatException(value.getValue()));
 
         try {
