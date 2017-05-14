@@ -24,33 +24,4 @@ public class Query implements GraphQLRootResolver {
                 .findCodepoint(codepointValue)
                 .orElseThrow(CodepointNotFound::new);
     }
-
-    public List<Codepoint> codepoints() {
-        Codepoint c1 = new Character(
-                CodepointValue.of(0x41),
-                "LATIN CAPITAL LETTER A",
-                new Properties(
-                        "LATIN CAPITAL LETTER A",
-                        "Basic Latin"
-                )
-        );
-        Codepoint c2 = new Character(
-                CodepointValue.of(0x42),
-                "LATIN CAPITAL LETTER B",
-                new Properties(
-                        "LATIN CAPITAL LETTER B",
-                        "Basic Latin"
-                )
-        );
-        Codepoint c3 = new Character(
-                CodepointValue.of(0x43),
-                "LATIN CAPITAL LETTER C",
-                new Properties(
-                        "LATIN CAPITAL LETTER C",
-                        "Basic Latin"
-                )
-        );
-
-        return Arrays.asList(c1, c2, c3);
-    }
 }

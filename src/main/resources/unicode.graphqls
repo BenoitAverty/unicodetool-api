@@ -1,5 +1,5 @@
 type Query {
-    codepoints: [Codepoint]
+    #codepoints: [Codepoint]
     codepoint(value: CodepointValue!): Codepoint
 }
 
@@ -40,6 +40,132 @@ type NonCharacter implements Codepoint {
 }
 
 type Properties {
+    # general properties
     name: String
+    nameAlias: [NameAlias]
     block: String
+    age: String
+    generalCategory: String
+    script: String
+    scriptExtensions: [String]
+    whiteSpace: Boolean
+    alphabetic: Boolean
+    hangulSyllabeType: String
+    nonCharacterCodePoint: Boolean
+    defaultIgnorableCodePoint: Boolean
+    deprecated: Boolean
+    logicalOrderException: Boolean
+    variationSelector: Boolean
+
+    # case properties
+    uppercase: Boolean
+    lowercase: Boolean
+    lowercaseMapping: [String]
+    titlecaseMapping: [String]
+    uppercaseMapping: [String]
+    caseFolding: [String]
+    simpleLowercaseMapping: String
+    simpleTitlecaseMapping: String
+    simpleUppercaseMapping: String
+    simpleCaseFolding: String
+    softDotted: Boolean
+    cased: Boolean
+    caseIgnorable: Boolean
+    changesWhenLowercased: Boolean
+    changesWhenUppercased: Boolean
+    changesWhenTitlecased: Boolean
+    changesWhenCasefolded: Boolean
+    changesWhenCasemapped: Boolean
+
+    # numeric properties
+    numericValue: String
+    numericType: String
+    hexDigit: Boolean
+    asciiHexDigit: Boolean
+
+    # normalization properties
+    canonicalCombiningClass: Int
+    decompositionMapping: [String]
+    compositionExclusion: Boolean
+    fullCompositionExclusion: Boolean
+    decompositionType: String
+    fcNfkcClosure: [String]
+    nfcQuickCkeck: String
+    nfkcQuickCheck: String
+    nfdQuickCheck: String
+    nfkdQuickCheck: String
+    expandsOnNfc: Boolean
+    expandsOnNfkc: Boolean
+    expandsOnNfd: Boolean
+    expandsOnNfkd: Boolean
+    nfkcCasefold: [String]
+    changesWhenNfkcCaseFolded: Boolean
+
+    # shaping and rendering properties
+    joinControl: Boolean
+    joiningGroup: String
+    joiningType: String
+    lineBreak: String
+    graphemeClusterBreak: String
+    sentenceBreak: String
+    wordBreak: String
+    eastAsianWidth: String
+    prependConcatenationMark: Boolean
+
+    # Bidirectional properties
+    bidiClass: String
+    bidiControl: Boolean
+    bidiMirrored: Boolean
+    bidiMirroringGlyph: String
+    bidiPairedBracket: CodepointValue
+    bidiPairedBracketType: String
+
+    # identifiers
+    idContinue: Boolean
+    idStart: Boolean
+    xidContinue: Boolean
+    xidStart: Boolean
+    patternSyntax: Boolean
+    patternWhiteSpace: Boolean
+
+    # CJK properties
+    ideographic: Boolean
+    unifiedIdeograph: Boolean
+    radical: Boolean
+    idsBinaryOperator: Boolean
+    idsTrinaryOperator: Boolean
+    unicodeRadicalStroke: [String]
+
+    # Misc properties
+    math: Boolean
+    quotationMark: Boolean
+    dash: Boolean
+    hyphen: Boolean
+    sentenceTerminal: Boolean
+    terminalPunctuation: Boolean
+    diacritic: Boolean
+    extender: Boolean
+    graphemeBase: Boolean
+    graphemeExtend: Boolean
+    graphemeLink: Boolean
+    unicode1Name: String
+    isoComment: String
+    indicPositionalCategory: String
+    indicSyllabicCategory: String
+
+    # Contributory properties
+    otherAlphabetic: Boolean
+    otherDefaultIgnorableCodePoint: Boolean
+    otherGraphemeExtend: Boolean
+    otherIdStart: Boolean
+    otherIdContinue: Boolean
+    otherLowercase: Boolean
+    otherMath: Boolean
+    otherUppercase: Boolean
+    jamoShortName: String
+}
+
+type NameAlias {
+    type: String
+    alias: String
 }
