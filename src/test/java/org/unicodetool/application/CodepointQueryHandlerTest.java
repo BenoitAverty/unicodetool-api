@@ -94,6 +94,15 @@ public class CodepointQueryHandlerTest {
         }
 
         @Test
+        @DisplayName("Parameter with lowercase letters")
+        public void findCodepointWithLowercase() {
+
+            final Optional<Codepoint> actual = codepointQueryHandler.findCodepoint(CodepointValue.of("U+001f"));
+
+            assertTrue(actual.isPresent(), "Codepoint was not found");
+        }
+
+        @Test
         @DisplayName("Value on the limit of a range codepoint")
         public void findCodepointAtRangeLimit() {
             final CodepointValue expectedCodepointValue = CodepointValue.of("FFFFF");
