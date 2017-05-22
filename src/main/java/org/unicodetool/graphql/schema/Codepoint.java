@@ -16,4 +16,6 @@ public abstract class Codepoint {
     public Integer getDecimalValue() {
         return value.inDecimalFormat();
     }
+
+    public abstract Codepoint withValue(CodepointValue value);
 }

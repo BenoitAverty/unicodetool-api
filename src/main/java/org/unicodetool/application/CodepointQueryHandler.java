@@ -18,10 +18,12 @@ import java.util.Optional;
 public class CodepointQueryHandler {
 
     private final UnicodeCharacterDatabaseFinder unicodeCharacterDatabaseFinder;
+    private final CodepointConverter codepointConverter;
 
     @Autowired
-    public CodepointQueryHandler(UnicodeCharacterDatabaseFinder finder) {
+    public CodepointQueryHandler(UnicodeCharacterDatabaseFinder finder, CodepointConverter converter) {
         this.unicodeCharacterDatabaseFinder = finder;
+        codepointConverter = converter;
     }
 
     /**
@@ -53,6 +55,7 @@ public class CodepointQueryHandler {
         }
 
         return unicodeCharacterDatabaseFinder.findCodepoint(formattedValue)
-                .map(CodepointConverter.withFormattedValue(formattedValue));
+                .map(codepointConverter::convert)
+                .map(cp -> cp.withValue(value));
     }
 }

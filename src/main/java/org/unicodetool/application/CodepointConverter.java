@@ -1,5 +1,6 @@
 package org.unicodetool.application;
 
+import org.springframework.stereotype.Service;
 import org.unicodetool.graphql.schema.*;
 import org.unicodetool.graphql.schema.Character;
 import org.unicodetool.ucd.schema.Boolean;
@@ -12,41 +13,23 @@ import static org.unicodetool.ucd.schema.Boolean.Y;
 
 /**
  * Converts a Codepoint in the XML representation of the UCD to the GraphQL schema object.
- *
- * This function needs to know the formatted value of the codepoint, because the xml node doesn't always contain it
- * (for example when the xml node represents a range of codepoints).
- *
- * Use the {@link CodepointConverter#withFormattedValue} function to create a converter.
  */
-public class CodepointConverter implements Function<CodePoint, Codepoint> {
+@Service
+public class CodepointConverter {
 
-    private final String formattedValue;
-    private CodepointConverter(String formattedValue) {
-        this.formattedValue = formattedValue;
-    }
 
-    /**
-     * Create a CodepointConverter with the given formatted value. The formatted value will be the value of the
-     * returned codepoint object. It is necessary because the xml node doesn't always contain the value.
-     */
-    public static CodepointConverter withFormattedValue(String formattedValue) {
-        return new CodepointConverter(formattedValue);
-    }
-
-    @Override
-    public Codepoint apply(CodePoint xmlCodePoint) {
-
+    public Codepoint convert(CodePoint xmlCodePoint) {
         if("Cn".equals(xmlCodePoint.getGc())) {
             if(Boolean.Y.equals(xmlCodePoint.getNChar())) {
                 return new NonCharacter(
-                        CodepointValue.of(formattedValue),
+                        CodepointValue.of(xmlCodePoint.getCp()),
                         xmlCodePoint.getNa(),
                         this.buildProperties(xmlCodePoint)
                 );
             }
             else {
                 return new Reserved(
-                        CodepointValue.of(formattedValue),
+                        CodepointValue.of(xmlCodePoint.getCp()),
                         xmlCodePoint.getNa(),
                         this.buildProperties(xmlCodePoint)
                 );
@@ -55,13 +38,13 @@ public class CodepointConverter implements Function<CodePoint, Codepoint> {
 
         if("Cs".equals(xmlCodePoint.getGc())) {
             return new Surrogate(
-                    CodepointValue.of(formattedValue),
+                    CodepointValue.of(xmlCodePoint.getCp()),
                     xmlCodePoint.getNa(),
                     this.buildProperties(xmlCodePoint)
             );
         }
         return new Character(
-                CodepointValue.of(formattedValue),
+                CodepointValue.of(xmlCodePoint.getCp()),
                 xmlCodePoint.getNa(),
                 this.buildProperties(xmlCodePoint)
         );

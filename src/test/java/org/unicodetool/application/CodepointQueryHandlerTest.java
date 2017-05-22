@@ -39,7 +39,9 @@ public class CodepointQueryHandlerTest {
         UnicodeCharacterDatabaseFinder finder = new UnicodeCharacterDatabaseFinder(m, testUcd.getInputStream());
         finder.init();
 
-        this.codepointQueryHandler = new CodepointQueryHandler(finder);
+        CodepointConverter converter = new CodepointConverter();
+
+        this.codepointQueryHandler = new CodepointQueryHandler(finder, converter);
     }
 
 

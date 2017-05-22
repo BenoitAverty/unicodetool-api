@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.stereotype.Service;
+import org.unicodetool.graphql.schema.Codepoint;
 import org.unicodetool.ucd.schema.CodePoint;
 import org.unicodetool.ucd.schema.Repertoire;
 import org.unicodetool.ucd.schema.UcdContent;
@@ -16,8 +17,11 @@ import javax.xml.transform.stream.StreamSource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -67,7 +71,6 @@ public class UnicodeCharacterDatabaseFinder {
      */
     @Cacheable("codepoint")
     public Optional<CodePoint> findCodepoint(String formattedValue) {
-        log.debug(String.format("Cache miss for codepoint %s", formattedValue));
 
         // Return true if the strValue above is equal to the given codepoint value,
         // or in the given codepoint range
@@ -88,5 +91,26 @@ public class UnicodeCharacterDatabaseFinder {
                 .map(obj -> (CodePoint) obj)
                 .filter(codepointMatches)
                 .findAny();
+    }
+
+    /**
+     * Find codepoints with a name matching or containing the provided value.
+     *
+     * @param name name of the codepoint.
+     * @return a list of matching codepoints.
+     */
+    @Cacheable("codepointsByName")
+    public List<CodePoint> findByName(String name) {
+
+        Predicate<CodePoint> codepointMatches = codepoint -> codepoint.getNa().toUpperCase().contains(name.toUpperCase());
+
+        return ucd.getDescriptionOrRepertoireOrBlocks().parallelStream()
+                .filter(obj -> Repertoire.class.isAssignableFrom(obj.getClass()))
+                .flatMap(obj -> ((Repertoire)obj).getCodePointOrGroup().parallelStream())
+                .map(obj -> ((JAXBElement)obj).getValue())
+                .filter(obj -> CodePoint.class.isAssignableFrom(obj.getClass()))
+                .map(obj -> (CodePoint) obj)
+                .filter(codepointMatches)
+                .collect(Collectors.toList());
     }
 }
