@@ -75,6 +75,7 @@ public class CodepointQueryHandlerTest {
             final Optional<Codepoint> actual = codepointQueryHandler.findCodepoint(CodepointValue.of("U+0041"));
 
             assertTrue(actual.isPresent(), "Codepoint was not found");
+            assertEquals("U+0041", actual.get().getValue().inUnicodeFormat());
         }
 
         @Test

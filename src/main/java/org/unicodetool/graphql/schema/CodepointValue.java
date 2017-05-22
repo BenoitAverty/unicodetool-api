@@ -39,14 +39,14 @@ public class CodepointValue {
      * by a 4 to 6 digits hexadecimal number (e.g. U+0041 or U+1FFCD)
      */
     public String inUnicodeFormat() {
-        return "U+"+value;
+        return value.startsWith("U+") ? value : "U+"+value;
     }
 
     /**
      * @return the codepoint value as a decimal integer.
      */
     public Integer inDecimalFormat() {
-        return Integer.parseInt(value, 16);
+        return Integer.parseInt(value.startsWith("U+") ? value.substring(2) : value, 16);
     }
 
     /**
