@@ -11,4 +11,9 @@ public class Character extends Codepoint {
     public String character() {
         return new String(new int[] { this.getDecimalValue() }, 0, 1);
     }
+
+    @Override
+    public Codepoint withValue(CodepointValue value) {
+        return new Character(value, this.getName(), this.getProperties());
+    }
 }

@@ -17,16 +17,24 @@ import java.util.stream.Stream;
 @Service
 public class CodepointSearchQueryHandler {
 
-    private UnicodeCharacterDatabaseFinder unicodeCharacterDatabaseFinder;
+    private final UnicodeCharacterDatabaseFinder unicodeCharacterDatabaseFinder;
+    private final CodepointConverter codepointConverter;
 
     @Autowired
-    public CodepointSearchQueryHandler(UnicodeCharacterDatabaseFinder finder) {
+    public CodepointSearchQueryHandler(UnicodeCharacterDatabaseFinder finder, CodepointConverter converter) {
         this.unicodeCharacterDatabaseFinder = finder;
+        this.codepointConverter = converter;
     }
 
     public List<Codepoint> findByName(String name) {
-        return unicodeCharacterDatabaseFinder.findByName(name)
-                .map(CodepointConverter.withFormattedValue("0041"))
+
+        String formattedName = name.trim();
+        if(formattedName.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        return unicodeCharacterDatabaseFinder.findByName(formattedName).stream()
+                .map(codepointConverter::convert)
                 .collect(Collectors.toList());
     }
 }

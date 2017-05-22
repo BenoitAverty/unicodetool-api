@@ -20,6 +20,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -93,15 +94,15 @@ public class UnicodeCharacterDatabaseFinder {
     }
 
     /**
-     * Find codepoints with a name matching the provided value.
+     * Find codepoints with a name matching or containing the provided value.
      *
      * @param name name of the codepoint.
      * @return a list of matching codepoints.
      */
     @Cacheable("codepointsByName")
-    public Stream<CodePoint> findByName(String name) {
+    public List<CodePoint> findByName(String name) {
 
-        Predicate<CodePoint> codepointMatches = codepoint -> codepoint.getNa().equals(name);
+        Predicate<CodePoint> codepointMatches = codepoint -> codepoint.getNa().toUpperCase().contains(name.toUpperCase());
 
         return ucd.getDescriptionOrRepertoireOrBlocks().parallelStream()
                 .filter(obj -> Repertoire.class.isAssignableFrom(obj.getClass()))
@@ -109,6 +110,7 @@ public class UnicodeCharacterDatabaseFinder {
                 .map(obj -> ((JAXBElement)obj).getValue())
                 .filter(obj -> CodePoint.class.isAssignableFrom(obj.getClass()))
                 .map(obj -> (CodePoint) obj)
-                .filter(codepointMatches);
+                .filter(codepointMatches)
+                .collect(Collectors.toList());
     }
 }
