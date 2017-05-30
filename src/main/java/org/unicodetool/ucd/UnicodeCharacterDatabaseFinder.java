@@ -69,7 +69,6 @@ public class UnicodeCharacterDatabaseFinder {
      *                       e.g. 0041 or 1D12F.
      * @return The codepoint as a UCD XML Object.
      */
-    @Cacheable("codepoint")
     public Optional<CodePoint> findCodepoint(String formattedValue) {
 
         // Return true if the strValue above is equal to the given codepoint value,
@@ -99,7 +98,6 @@ public class UnicodeCharacterDatabaseFinder {
      * @param name name of the codepoint.
      * @return a list of matching codepoints.
      */
-    @Cacheable("codepointsByName")
     public List<CodePoint> findByName(String name) {
 
         Predicate<CodePoint> codepointMatches = codepoint -> codepoint.getNa().toUpperCase().contains(name.toUpperCase());

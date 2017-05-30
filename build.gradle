@@ -42,8 +42,6 @@ dependencies {
 
 	compile('org.springframework:spring-oxm:4.2.4.RELEASE')
 
-	compile('com.hazelcast:hazelcast')
-
 	compile('com.graphql-java:graphiql-spring-boot-starter:3.1.1')
 	compile('com.graphql-java:graphql-spring-boot-starter:3.1.1')
 	compile('com.graphql-java:graphql-java-tools:2.2.0')
