@@ -1,0 +1,14 @@
+resources:
+- name: unicodetool-api
+  type: git
+  source:
+    uri: https://github.com/BenoitAverty/unicodetool-api.git
+
+jobs:
+- name: unit-tests
+  public: true
+  plan:
+  - get: unicodetool-api
+    trigger: true
+  - task: unit-tests
+    file: unicodetool-api/ci/tasks/unit-tests.yml
