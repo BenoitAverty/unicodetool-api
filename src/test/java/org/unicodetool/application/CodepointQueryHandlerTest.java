@@ -1,8 +1,7 @@
 package org.unicodetool.application;
 
-import lombok.NoArgsConstructor;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ContainerExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.*;
 import org.springframework.core.io.ClassPathResource;
@@ -155,12 +154,12 @@ public class CodepointQueryHandlerTest {
 class CodepointTypesArgsSource implements ArgumentsProvider {
     public CodepointTypesArgsSource() {}
     @Override
-    public Stream<? extends Arguments> arguments(ContainerExtensionContext context) throws Exception {
+    public Stream<? extends Arguments> provideArguments(ExtensionContext context) throws Exception {
         return Stream.of(
-                ObjectArrayArguments.create(CodepointValue.of("0041"), Character.class),
-                ObjectArrayArguments.create(CodepointValue.of("FFFFE"), NonCharacter.class),
-                ObjectArrayArguments.create(CodepointValue.of("D801"), Surrogate.class),
-                ObjectArrayArguments.create(CodepointValue.of("0378"), Reserved.class)
+                Arguments.of(CodepointValue.of("0041"), Character.class),
+                Arguments.of(CodepointValue.of("FFFFE"), NonCharacter.class),
+                Arguments.of(CodepointValue.of("D801"), Surrogate.class),
+                Arguments.of(CodepointValue.of("0378"), Reserved.class)
         );
     }
 }

@@ -1,6 +1,6 @@
 buildscript {
 	ext {
-		springBootVersion = '2.0.0.BUILD-SNAPSHOT'
+		springBootVersion = '2.0.0.M3'
 	}
 	repositories {
 		mavenCentral()
@@ -8,8 +8,8 @@ buildscript {
 		maven { url 'https://repo.spring.io/milestone' }
 	}
 	dependencies {
-		classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
-		classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-M4'
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-RC3'
 	}
 }
 
@@ -36,7 +36,6 @@ repositories {
 
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-actuator')
-	compile('org.springframework.boot:spring-boot-actuator-docs')
 	compile('org.springframework.boot:spring-boot-devtools')
 	compile('org.springframework.boot:spring-boot-starter-tomcat')
 
@@ -49,16 +48,9 @@ dependencies {
 	compileOnly('org.projectlombok:lombok')
 
 	testCompile('org.springframework.boot:spring-boot-starter-test')
-	testCompile('org.junit.jupiter:junit-jupiter-api:5.0.0-M4')
-	testCompile('org.junit.jupiter:junit-jupiter-params:5.0.0-M4')
-	testRuntime('org.junit.jupiter:junit-jupiter-engine:5.0.0-M4')
-}
-
-// Make the jar fully executable
-bootJar {
-	launchScript {
-		included = true
-	}
+	testCompile('org.junit.jupiter:junit-jupiter-api:5.0.0-RC3')
+	testCompile('org.junit.jupiter:junit-jupiter-params:5.0.0-RC3')
+	testRuntime('org.junit.jupiter:junit-jupiter-engine:5.0.0-RC3')
 }
 
 // Configure the JAXB classes og the unicode character database xml schema

@@ -2,11 +2,7 @@ package org.unicodetool;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.hateoas.Link;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 @SpringBootApplication
