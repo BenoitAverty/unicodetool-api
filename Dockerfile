@@ -13,4 +13,4 @@ EXPOSE 8080
 
 ENV SPRING_PROFILES_ACTIVE prod
 ENV JAVA_OPTS -Xmx1g
-ENTRYPOINT ["/unicodetool-api.jar"]
+ENTRYPOINT ["java", "-jar", "/unicodetool-api.jar"]
