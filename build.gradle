@@ -55,7 +55,12 @@ dependencies {
 
 // Run end to end tests
 task endToEndTest {
-	println "Running end to end tests on deployment " + deploymentUrl
+	doLast {
+		if (!project.hasProperty("deploymentUrl")) {
+			throw new InvalidUserDataException("Deployment url not given. Aborting.")
+		}
+		println "Running end to end tests on deployment " + deploymentUrl
+	}
 }
 
 // Configure the JAXB classes og the unicode character database xml schema
