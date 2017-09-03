@@ -9,3 +9,5 @@ script:
   - ./gradlew test
   - deploy_url=$(now -p -n unicodetool-api -t $NOW_TOKEN)
   - ./gradlew endToEndTest -PdeploymentUrl=$deploy_url
+after_success:
+  - now alias $deploy_url unicodetool-api
