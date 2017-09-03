@@ -3,6 +3,8 @@ jdk: oraclejdk8
 branches:
   only:
     - master
+before_script:
+  - npm install -g now
 script:
   - ./gradlew test
   - deploy_url=$(now -p -n unicodetool-api -t $NOW_TOKEN)
