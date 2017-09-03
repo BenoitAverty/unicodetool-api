@@ -24,7 +24,7 @@ apply plugin: 'io.spring.dependency-management'
 apply plugin: 'org.junit.platform.gradle.plugin'
 
 group = 'org.unicodetool'
-version = rootProject.file('VERSION').text
+version = '1.0.0'
 sourceCompatibility = 1.8
 
 repositories {
@@ -51,6 +51,11 @@ dependencies {
 	testCompile('org.junit.jupiter:junit-jupiter-api:5.0.0-RC3')
 	testCompile('org.junit.jupiter:junit-jupiter-params:5.0.0-RC3')
 	testRuntime('org.junit.jupiter:junit-jupiter-engine:5.0.0-RC3')
+}
+
+// Run end to end tests
+task endToEndTest {
+	println "Running end to end tests on deployment " + deploymentUrl
 }
 
 // Configure the JAXB classes og the unicode character database xml schema

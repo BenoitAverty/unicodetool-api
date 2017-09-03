@@ -6,8 +6,7 @@ jdk: oraclejdk8
 branches:
   only:
     - master
-before_script:
-  - docker login -u="$DOCKER_USER" -p="$DOCKER_PASS"
 script:
-  - ./ci/build.sh
-  - ./ci/publish.sh
+  - ./gradlew test
+  - deploy_url=$(now -p -n unicodetool-api -t $NOW_TOKEN)
+  - ./gradlew endToEndTest -PdeploymentUrl=$deploy_url
