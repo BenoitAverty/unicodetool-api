@@ -1,6 +1,7 @@
 type Query {
     codepointSearch(name: String): [Codepoint]
     codepoint(value: CodepointValue!): Codepoint
+    characters(input: String): [Codepoint]
 }
 
 interface Codepoint {
