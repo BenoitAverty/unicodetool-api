@@ -35,8 +35,7 @@ public class Query implements GraphQLRootResolver {
         return codepointSearchQueryHandler.findByName(name);
     }
 
-    public Codepoint characters(String input) {
-        return charactersQueryHandler.findCodepointForCharacter(input)
-                .orElseThrow(CodepointNotFound::new);
+    public List<Codepoint> characters(String input) {
+        return charactersQueryHandler.findCodepointForCharacters(input);
     }
 }
